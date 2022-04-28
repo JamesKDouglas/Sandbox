@@ -8,4 +8,4 @@ So try the exercises on you own first, then if you are having difficulty please 
 
 The exercises generally are coded using the "template" folder. Feel free to do the same - whenever you start a new local CodeWars initiative and want a framework to just make a local VScode JavaScript file, use a copy of the template.
 
-Also, for any recruiters viewing this: please don't consider this the only code I've done! Yes this code here is part of an educational program. No, this is not the only education I have done!
+Also, for any HR staff or recruiters viewing this: please don't consider this the only code I've done! CodeWars is a good site for practicing coding and easy to share. It is rarely the only work that coders are doing.
