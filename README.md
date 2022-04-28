@@ -1,6 +1,6 @@
 # CodeWars
 
-This is just a repository to share some solutions to CodeWars.
+This is just a repository to share some solutions to CodeWars. It contains training exercises that vary from 8 to 4 kyu.
 
 At the 100Devs agency we have a guideline for using the CodeWars website: If you've been working on something for over 20 minutes, look at the solution. 
 
