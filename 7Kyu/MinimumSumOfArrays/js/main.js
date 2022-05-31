@@ -10,3 +10,4 @@ function minSum(arr) {
     return sum;
   }
   //I did this on my phone in the park while drinking beer, so there is no PREP section etc.
+  //They key was realizing that if you're going to have a minimum sum of products you must match the smallest numbers with the largest. So just sort the array and multiply the shift with the pop then add 'em all together..
