@@ -16,7 +16,11 @@
 // What sort of search should we do?
 // Here is what I suggest this. I call it "circle search" because we move from node to node, searching around the node for the destination. Arcs explored are recorded to prevent infinite looping and progress the search in a systematic manner. At some point as we reach the end of a branch the end points are marked as dead ends or loops by being added to the array of arcsAlreadyExplored. If those arcs show up again in the search they are either ignored or removed before further searching happens.
 
-//perhaps I need 3 arc collections: already explored, actively exploring (connected to current node) and ExploreMap, which is a working array that contains more of a history.
+//perhaps I need 4 arc collections: 
+//alreadyExplored: a record of dead ends and loops, /
+//activelyExploring : arcs connected to current node. 
+//exploreMap: a working array that contains more of a history. This is a multidimensional array.
+//Of course there is also the original, arcs.
 
 // 1) Search the arc collection for arcs that have the start node. Put these arcs into arcsBeingExplored. 
 // 1a) (doesn't need to run the first time) Remove arcs that have already been explored (in arcsAlreadyExplored) from arcsBeingExplored. Note that I don't want to give up on a whole branch just because a single arc leads there. However, the way the algorithm works righ now that isn't possible. If there is an arc that leads to a group, the arc is traversed then the group is explored. So I can just add arcs to an array of ones that are already explored, then not explore them a second time.
@@ -62,5 +66,51 @@
 //It is possible, if the arc list was in a different order, that we would have gone a-c then c-a. In that case we'd maybe be in a loop and we have to identify that the arc has already been explored then somehow break or move on to the next exploration stage.
 
 function solve_graph(start, end, arcs) {
-  // TODO
+  let alreadyExplored = [];
+  let activelyExploring = [];
+  let exploreMap = [];
+
+  let currentNode = start; //initialize
+  exploreMap = arcs.filter(item=>item.start.includes(currentNode));
+  
+  // loop through exploreMap somehow. Putting a 0 here is just moving along 1 step from pseudocode, like an example really.
+  activelyExploring = exploreMap[0];
+
+  if (activelyExploring[0] == alreadyExplored){
+    break;//exit the explore loop and take one step back in the graph - move on to the next array item in exploreMap, erasing activelyExploring then adding the array item contents from exploreMap to activelyExploring. 
+  }
+
+//activelyExploring is always just a 2 dimensional array - it has a list of arcs in it, that's all. 
+//Loop through the arcs and look for - 
+//1)the destination (end).
+//2) if the destination isn't there then detect if this is a dead end. To do that, check the master list (arcs) for arcs that originate from the node. If there are none (filtered array length is 0) then just add the previously travelled arc to alreadyExplored and move on.
+
+  circleSearch()//collect all arcs connected to the current node. Add them to ExploreMap in a way that build that map as a nested array. This array then contains a history of what has been explored.
+  findStartArcs();
+  return(earlyReturns(start, end, arcs));
 }
+
+function earlyReturns(start, end, arcs){
+  let foundStarts = arcs.filter(arc=>arc.start.includes(start));
+  let numStarts = foundStarts.length;
+
+  let foundEnds = arcs.filter(arc=>arc.end.includes(end));
+  let numEnds = foundEnds.length;
+
+  console.log(numStarts);
+
+  if (start == end){
+    console.log('start location is already the same as end')
+    return true;
+  } else if (numStarts === 0){
+    console.log('start location missing from graph')
+    return false;
+  } else if (numEnds == 0){
+    console.log('end location missing from graph')
+    return false;
+  }
+}
+
+var arcs = [{ start : "a", end : "b" }, { start : "a", end : "a"}];
+
+console.log(solve_graph('a', 'c', arcs));
