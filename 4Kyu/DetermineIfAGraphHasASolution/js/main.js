@@ -66,18 +66,29 @@
 //It is possible, if the arc list was in a different order, that we would have gone a-c then c-a. In that case we'd maybe be in a loop and we have to identify that the arc has already been explored then somehow break or move on to the next exploration stage.
 
 function solve_graph(start, end, arcs) {
-  let alreadyExplored = [];
-  let activelyExploring = [];
   let exploreMap = [];
+  let activelyExploring = [];
+  let alreadyExplored = [];
 
-  let currentNode = start; //initialize
-  exploreMap = arcs.filter(item=>item.start.includes(currentNode));
+  let destination = end;
+  let origin = start;// end and start are used for the keys for the arcs, so the words get confusing. There is an origin, a destination, current node, start and end to each arc.
+
+  let currentNode = origin; //initialize
+  exploreMap = arcs.filter(arc=>arc.start.includes(currentNode));
   
   // loop through exploreMap somehow. Putting a 0 here is just moving along 1 step from pseudocode, like an example really.
   activelyExploring = exploreMap[0];
-
-  if (activelyExploring[0] == alreadyExplored){
-    break;//exit the explore loop and take one step back in the graph - move on to the next array item in exploreMap, erasing activelyExploring then adding the array item contents from exploreMap to activelyExploring. 
+  for (let j = 0;j<arcs.length;j++){
+    for (i in activelyExploring){
+      //Check to see if I have been here before and marked it as a dead end, loop, or just thoroughly explored already. 
+      if (alreadyExplored.includes(activelyExploring[i])){
+        continue;//iterate to the next item.
+      } else if (activelyExploring[i].end.includes(destination)) {//If not already explored, is it the solution?
+        return true;
+      } else {//This isn't the solution end arc but it's a valid arc so add it to the exploreMap
+        exploreMap[j].pop(activelyExploring);
+      }
+    }             
   }
 
 //activelyExploring is always just a 2 dimensional array - it has a list of arcs in it, that's all. 
@@ -114,3 +125,7 @@ function earlyReturns(start, end, arcs){
 var arcs = [{ start : "a", end : "b" }, { start : "a", end : "a"}];
 
 console.log(solve_graph('a', 'c', arcs));
+
+//I suppose another way of doing this is to pretend like it's an IP network. Each node is a router. So organize the arc map into a data set that describes the routeres - each node will possess a list of nodes it connects to. The name of the node is like the IP address. So it would be a flat topology TCP/IP router simulator. Imagine functions that call each other in a sort of handshake. One sends a packet out, which in this case has no data but does have  destination. A check function goes through each connecting node and asks "Is this the destination? Does it have an arc to the destination?" If it's then either it's solved or it responds that this is the list of connected nodes.
+
+//That is similar to what I'm doing but the description here is literally two functions talking to each other. I mostly just keep track of things in arrays, in a central location.
