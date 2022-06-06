@@ -65,40 +65,127 @@
 
 //It is possible, if the arc list was in a different order, that we would have gone a-c then c-a. In that case we'd maybe be in a loop and we have to identify that the arc has already been explored then somehow break or move on to the next exploration stage.
 
-function solve_graph(start, end, arcs) {
-  let exploreMap = [];
-  let activelyExploring = [];
-  let alreadyExplored = [];
+// function solve_graph(start, end, arcs) {
+//   let exploreMap = [];
+//   let activelyExploring = [];
+//   let alreadyExplored = [];
 
-  let destination = end;
-  let origin = start;// end and start are used for the keys for the arcs, so the words get confusing. There is an origin, a destination, current node, start and end to each arc.
+//   let destination = end;
+//   let origin = start;// end and start are used for the keys for the arcs, so the words get confusing. There is an origin, a destination, current node, start and end to each arc.
 
-  let currentNode = origin; //initialize
-  exploreMap = arcs.filter(arc=>arc.start.includes(currentNode));
+//   let currentNode = origin; //initialize
+//   exploreMap = arcs.filter(arc=>arc.start.includes(currentNode));//retrieve all the nodes that start from here
   
-  // loop through exploreMap somehow. Putting a 0 here is just moving along 1 step from pseudocode, like an example really.
-  activelyExploring = exploreMap[0];
-  for (let j = 0;j<arcs.length;j++){
-    for (i in activelyExploring){
-      //Check to see if I have been here before and marked it as a dead end, loop, or just thoroughly explored already. 
-      if (alreadyExplored.includes(activelyExploring[i])){
-        continue;//iterate to the next item.
-      } else if (activelyExploring[i].end.includes(destination)) {//If not already explored, is it the solution?
-        return true;
-      } else {//This isn't the solution end arc but it's a valid arc so add it to the exploreMap
-        exploreMap[j].pop(activelyExploring);
-      }
-    }             
+//   // loop through exploreMap somehow. Putting a 0 here is just moving along 1 step from pseudocode, like an example really.
+//   activelyExploring = exploreMap[0];
+
+//   for (let j = 0;j<arcs.length;j++){//this is set up just for the maximum possible iterations - exploring each arc once.
+//     for (i in activelyExploring){
+//       //Check to see if I have been here before and marked it as a dead end, loop, or just thoroughly explored already. 
+//       if (alreadyExplored.includes(activelyExploring[i])){
+//         continue;//iterate to the next item.
+//       } else if (activelyExploring[i].end.includes(destination)) {//If not already explored, is it the solution?
+//         return true;
+//       } else {//Ok so this is a valid arc, but not the solution. Add it to the exploreMap.
+//         exploreMap[j][i]
+//       }
+//     }   
+
+//   }
+
+// //activelyExploring is always just a 2 dimensional array - it has a list of arcs in it, that's all. 
+// //Loop through the arcs and look for - 
+// //1)the destination (end).
+// //2) if the destination isn't there then detect if this is a dead end. To do that, check the master list (arcs) for arcs that originate from the node. If there are none (filtered array length is 0) then just add the previously travelled arc to alreadyExplored and move on.
+
+//   circleSearch()//collect all arcs connected to the current node. Add them to ExploreMap in a way that build that map as a nested array. This array then contains a history of what has been explored.
+//   findStartArcs();
+//   return(earlyReturns(start, end, arcs));
+// }
+
+// function earlyReturns(start, end, arcs){
+//   let foundStarts = arcs.filter(arc=>arc.start.includes(start));
+//   let numStarts = foundStarts.length;
+
+//   let foundEnds = arcs.filter(arc=>arc.end.includes(end));
+//   let numEnds = foundEnds.length;
+
+//   console.log(numStarts);
+
+//   if (start == end){
+//     console.log('start location is already the same as end')
+//     return true;
+//   } else if (numStarts === 0){
+//     console.log('start location missing from graph')
+//     return false;
+//   } else if (numEnds == 0){
+//     console.log('end location missing from graph')
+//     return false;
+//   }
+// }
+
+// var arcs = [{ start : "a", end : "b" }, { start : "a", end : "a"}];
+
+// console.log(solve_graph('a', 'c', arcs));
+
+//I suppose another way of doing this is to pretend like it's an IP network. Each node is a router. So organize the arc map into a data set that describes the routeres - each node will possess a list of nodes it connects to. The name of the node is like the IP address. So it would be a flat topology TCP/IP router simulator. Imagine functions that call each other in a sort of handshake. One sends a packet out, which in this case has no data but does have  destination. A check function goes through each connecting node and asks "Is this the destination? Does it have an arc to the destination?" If it's then either it's solved or it responds that this is the list of connected nodes.
+
+//That is similar to what I'm doing but the description here is literally two functions talking to each other. I mostly just keep track of things in arrays, in a central location.
+
+//How about something way simpler, just single ended: 
+// destination, origin. workingStart, allArcsList.
+// Initialize workingStart as origin. 
+//Find the first arc in allArcsList that has a start of workingStart. 
+//Does this arc have the end of destination? If so job's done. 
+//If not, add this arc to Explored list. Find the next arc in allArcsList which has a start of workingStart. 
+//Does it have an end of the destination? If not, job's done. 
+//After I can't find any more arcs in the allArcsList that start with workingStart, take the first one I checked (which is in Explored List) and make the end workingStart. 
+//Now search again through the allArcsList for arcs with workingStart as a start and destination as end. 
+//Take the first one you find and if it's not the solution add it to the Explored list. 
+//When you do that Explored list is built out as a nested array. 
+
+// I could see a duplex strategy as faster - work from both directions, generating lists of ends. If ends ever match then you've solve it.
+
+
+//This is the Eloquent Javascript solution. Lets try to use it.
+// function findRoute(graph, from, to) {
+//   let work = [{at: from, route: []}];
+//   for (let i = 0; i < work.length; i++) {
+//     let {at, route} = work[i];
+//     for (let place of graph[at]) {
+//       if (place == to) return route.concat(place);
+//       if (!work.some(w => w.at == place)) {
+//         work.push({at: place, route: route.concat(place)});
+//       }
+//     }
+//   }
+// }
+
+function solve_graph(from, to, graph) {
+
+  let earlyRet = earlyReturns(from, to, graph);
+
+  //this if statement mostly just handles the null case - I don't want the function to return, I just want it to carry on.
+  if (earlyRet){
+    return true;
+  } else if (!earlyRet){
+    return false;
+  } else if (earlyRet == null){
+    continue;
   }
 
-//activelyExploring is always just a 2 dimensional array - it has a list of arcs in it, that's all. 
-//Loop through the arcs and look for - 
-//1)the destination (end).
-//2) if the destination isn't there then detect if this is a dead end. To do that, check the master list (arcs) for arcs that originate from the node. If there are none (filtered array length is 0) then just add the previously travelled arc to alreadyExplored and move on.
+  let work = [{at: from, route: []}];//initialize the work array by giving it a location.
 
-  circleSearch()//collect all arcs connected to the current node. Add them to ExploreMap in a way that build that map as a nested array. This array then contains a history of what has been explored.
-  findStartArcs();
-  return(earlyReturns(start, end, arcs));
+  for (let i = 0; i < work.length; i++) {//Initially work.length is just one. But it grows as the loop carries on, until searching is done. 
+    let {at, route} = work[i];//This is called "destructured assignment." 
+    for (let place of graph[at]) {//here place is like i, just a variable that helps iterate through the graph. However, with the for of loop it is assigned the value of the location, which is held in graph[at]. That exposes that this example is expecting a different graph structure - not arcs but nodes. This example does not use a directed graph. 
+      if (place == to) return route.concat(place);//concat is often used to append one array onto another one. Place is not an array though. Push similarly modifies an array but it returns differently. It returns the length of the new array, which is not what we want here - the author is choosing to return the modified array.
+      if (!work.some(w => w.at == place)) {//.some returns true if at least one element tests true. Handy for searching.
+        work.push({at: place, route: route.concat(place)});
+      }
+    }
+  }
+  return work;
 }
 
 function earlyReturns(start, end, arcs){
@@ -119,13 +206,7 @@ function earlyReturns(start, end, arcs){
   } else if (numEnds == 0){
     console.log('end location missing from graph')
     return false;
+  } else {
+    return null;
   }
 }
-
-var arcs = [{ start : "a", end : "b" }, { start : "a", end : "a"}];
-
-console.log(solve_graph('a', 'c', arcs));
-
-//I suppose another way of doing this is to pretend like it's an IP network. Each node is a router. So organize the arc map into a data set that describes the routeres - each node will possess a list of nodes it connects to. The name of the node is like the IP address. So it would be a flat topology TCP/IP router simulator. Imagine functions that call each other in a sort of handshake. One sends a packet out, which in this case has no data but does have  destination. A check function goes through each connecting node and asks "Is this the destination? Does it have an arc to the destination?" If it's then either it's solved or it responds that this is the list of connected nodes.
-
-//That is similar to what I'm doing but the description here is literally two functions talking to each other. I mostly just keep track of things in arrays, in a central location.
