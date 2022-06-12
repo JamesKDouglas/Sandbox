@@ -30,15 +30,15 @@ saturday = [5448, 8041, 6573, 8104, 6208, 5912, 7927, 8909, 7000, 5059, 6412, 63
 var stairs = [sunday,monday,tuesday,wednesday,thursday,friday,saturday];
 
 function stairsIn20(s){
-    console.log(s);
+    //console.log(s);
     let sum = 0;
     for (i in s){
-        console.log(`First loop examining ${s[i]}`)
+        //console.log(`First loop examining ${s[i]}`)
         for (j in s[i]){
-            console.log(`secondLoop examining ${s[i][j]}`)
+            //console.log(`secondLoop examining ${s[i][j]}`)
             sum += +s[i][j];
         }
-        console.log(`sum: ${sum}`);
+        //console.log(`sum: ${sum}`);
         }
     return sum*20;
 }
@@ -46,4 +46,4 @@ function stairsIn20(s){
 console.log(stairsIn20(stairs));
 
 //expecting 54636040 got 
-//           2731802
+//           2731802 oh right that's only 1 year.

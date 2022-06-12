@@ -33,7 +33,7 @@ function countCheckerboard(width, height, resolution) {
     // All inputs are BigInts. As far as the method goes this makes no difference. It just means we cannot use Math functions, mostly.
     // I'm going to call 1 resolution block a "pixel" as in an image on the screen. The width and height is like the hardware of the screen - imagine each one is an LED. Let's literaly just call them LEDs because the 'square' description is ambiguous. So we are counting the black LEDs.
 
-    //early returns
+    //early returns. Weeding out simple cases like this simplies the math later.
     if (width<resolution && height<resolution){
         return 0n;//we always start with white in the top left. So in this case there will be only white leds.
     };
@@ -58,27 +58,34 @@ function countCheckerboard(width, height, resolution) {
     mainBoardBlackCount = mainBoardBlackCount*resolution;//# of leds
 
 
-    //Now there is a right edge and a bottom edge we haven't looked at.
-    let rightEdgeWidth = width%resolution;//width, not in pixels but in LEDs. this is the same as width-mainBoardWidth.
-    let bottomEdgeHeight = height%resolution;//same as height-mainBoardHeight
-    let rightEdgeHeight = height - bottomEdgeHeight;//so I don't count the corner twice. Same as mainBoardHeight.
-    let bottomEdgeWidth = width;
+    //Now the right edge:
+    //In the main board we know it is an integer value of pixels, because we arrange that. Then multiply at the end. That saves computing power for a large main board. Here, we just work directly with LEDs. In a situation where the resolution is small and the width and height large, there could still be a lot of computing involved ( many leds ). So we will try to handle that by keeping things as pixels as long as possible.
+
+    let rightEdgeWidth = width%resolution;//width, not in pixels but in LEDs. This is the same as width-mainBoardWidth.
+    let rightEdgeHeight = mainBoardHeight*resolution;//so I don't count the corner twice. 
+    
 
     if (mainBoardWidth%2 == 0n){//there are an even number of squares in the width of the main board. So the upper left for the right edge is white.
-        //This right edge is an integer number of pixels tall. And of course a fraction wide. With regards to height, we face the same issue as A for even/odd.
-        if (rightEdgeHeight/resolution%2 ==0 ){
+        //This right edge is an integer number of pixels tall. With regards to height, we face the same issue as A for even/odd.
+
+        if ((rightEdgeHeight/resolution)%2 ==0 ){
             let rightEdgeBlackCount = rightEdgeWidth*rightEdgeHeight/2n; //count in leds not pixels. 
         } else {
-            let rightEdgeBlackCount = rightEdgeWidth*rightEdgeHeight/2n - rightEdgeWidth*resolution;//subtract one fraction of a black pixel.
+            let rightEdgeBlackCount = (rightEdgeWidth*rightEdgeHeight/2n) - rightEdgeWidth*resolution;//subtract one fraction of a black pixel.
         }
     } else {//the upper left of right edge is black
-        
+        if ((rightEdgeHeight/resolution)%2 ==0 ){//If the # squares is even then it's the same
+            let rightEdgeBlackCount = rightEdgeWidth*rightEdgeHeight/2n; //count in leds not pixels. 
+        } else {//if the # squares is not even then +1 not -1
+            let rightEdgeBlackCount = (rightEdgeWidth*rightEdgeHeight/2n) + rightEdgeWidth*resolution;//subtract one fraction of a black pixel.
+        }
     }
 
-    if (mainBoardHeight%2 == 0n){//there are an even number of squares in the height of the main board so the bottom left is white.
-    } else {//the upper left of right edge is black
-    
-    }
+    //Then the bottom edge:
+    let bottomEdgeWidth = width-rightEdgeWidth;//in leds.
+    let bottomEdgeHeight = height%resolution;//same as height-mainBoardHeight. in Leds.
+
+    //finally, the corner
 
 }
 
