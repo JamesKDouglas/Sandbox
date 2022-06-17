@@ -69,37 +69,75 @@
 
 //this algorithm is a bit basic. I could, for example, stop searching after finding the max. But it's not a big calculation job so whatever. 
 function solve(arr){
-    let freqArr = new Array(10).fill(0,0,10);//in order to increment I need to initialize the elements as zero. 
-    
-    for (i=0;i<=9;i++){//choose a number to scan for to count # times it occurs
+    let maxNum = Math.max(...arr);
+    //console.log(`initial array: ${arr}`);
+    //console.log(`maxNum: ${maxNum}`)
+    let freqArr = new Array(maxNum+1).fill(0,0,maxNum+1);//in order to increment I need to initialize the elements as zero. 
+    // console.log(`made empty array freqArr: ${freqArr} of length ${freqArr.length}`)
+    for (i=0;i<=maxNum;i++){//choose a number to scan for to count # times it occurs
+        // console.log(`scanning for ${i}`)
       for (j=0;j<arr.length;j++){//scan through the array
         if (arr[j] == i){
+            // console.log(`counted a ${i} at index ${j}`)
           freqArr[i]++;//if the number is present, count it.
         }
       }
     }
-    console.log(`freqArr assembled. It is: ${freqArr}`);
+    // console.log(`freqArr assembled. It is: ${freqArr} and of length ${freqArr.length}`);
 
     let newArr =[];
-    for (i=0;i<=9;i++){//look for 1's
-    console.log(`looking for ${i}'s in the freq array`)
-        for (j=9;j>0;j--){//start from the end of the array
-            console.log(`looking through the freqArr at position ${j} which is ${freqArr[j]}`)
-            if (freqArr[j] == i){//found a 1
-                console.log(`found a match. So there is ${i} occurrance of ${j}`);
+    for (i=0;i<=maxNum;i++){//look for a number
+    // console.log(`looking for ${i}'s in the freq array`)
+        for (j=maxNum;j>=0;j--){//start from the end of the array
+            // console.log(`looking through the freqArr at position ${j} which is ${freqArr[j]}`)
+            if (freqArr[j] == i){//found an occurrance of the number
+                 //console.log(`found a match. So there is ${i} occurrance of ${j}`);
                 for (k=0;k<freqArr[j];k++){
-                    console.log(`lets add that to arrArr`);
+                     //console.log(`lets add that to arrArr`);
                     newArr.unshift(j);
                 }
-                
-                console.log(`newArr is now ${newArr}`);
+                // console.log(`newArr is now ${newArr}`);
                 
             }
         }
     }
-    console.log(`${newArr}`);
+    // console.log(`${newArr}`);
     return newArr;
 }
 
 //solve([2,3,5,3,7,9,5,3,7]) = [3,3,3,5,5,7,7,2,9]
-console.log(solve([2,3,5,3,7,9,5,3,7]));
+// Expected: [1, 1, 1, 0, 0, 6, 6, 8, 8, 2, 3, 5, 9], instead got: [1, 1, 1, 6, 6, 8, 8, 2, 3, 5, 9]. wtf?
+
+//ok in the examples it only goes up to 9. But then they bring in up to 49. Just like codewars to not completely describe the problem or give a real example until you try to test the code.
+
+// let arr = [ 1,
+//     6,
+//     7,
+//     8,
+//     9,
+//     13,
+//     15,
+//     15,
+//     18,
+//     19,
+//     21,
+//     22,
+//     23,
+//     24,
+//     32,
+//     33,
+//     39,
+//     39,
+//     41,
+//     44,
+//     44,
+//     46,
+//     49 ]
+let arr = [1,2,3,0,5,0,1,6,8,8,6,9,1];
+console.log(solve(arr));
+
+//expecting[15, 15, 39, 39, 44, 44, 1, 6, 7, 8, 9, 13, 18, 19, 21, 22, 23, 24, 32, 33, 41, 46, 49]
+//[15, 15, 39, 39, 44, 44, 1, 6, 7, 8, 9, 13, 18, 19, 21, 22, 23, 24, 32, 33, 41, 46, 49]
+
+//trouble withi zeros still,
+//Expected: [1, 1, 1, 0, 0, 6, 6, 8, 8, 2, 3, 5, 9], instead got: [1, 1, 1, 6, 6, 8, 8, 2, 3, 5, 9]
