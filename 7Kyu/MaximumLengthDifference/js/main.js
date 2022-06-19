@@ -1,6 +1,6 @@
 function mxdiflg(a1, a2) {
-    if(!a1 || !a2){
-        return "Nothing";
+    if(a1.length == 0 || a2.length == 0){
+        return -1;
     }
 
     let strLengthsa1 = a1.map(el => el.length);
@@ -18,7 +18,17 @@ function mxdiflg(a1, a2) {
 
 }
 
-var s1 = ["hoqq", "bbllkw", "oox", "ejjuyyy", "plmiis", "xxxzgpsssa", "xxwwkktt", "znnnnfqknaz", "qqquuhii", "dvvvwz"];
-var s2 = ["cccooommaaqqoxii", "gggqaffhhh", "tttoowwwmmww"];
+// var s1 = ["hoqq", "bbllkw", "oox", "ejjuyyy", "plmiis", "xxxzgpsssa", "xxwwkktt", "znnnnfqknaz", "qqquuhii", "dvvvwz"];
+// var s2 = ["cccooommaaqqoxii", "gggqaffhhh", "tttoowwwmmww"];
 
+let s1 = [ 'jjjbbbggaaammmmmmsssbb',
+  'uuuqqqkkuullwxgggdddd',
+  'hhjjqqqqwwwpppxxx',
+  'jjjjmmrrrjjjjjhhjj',
+  'geeehhhpjjjjoo',
+  'kkkkkkkyyyygg',
+  'vvvvwwwyyyooo',
+  'ppphhqq',
+  'oo' ]
+let s2 = []
 console.log(mxdiflg(s1,s2));
