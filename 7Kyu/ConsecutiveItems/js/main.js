@@ -12,7 +12,8 @@ function consecutive(arr, a, b) {
         return true;
     } else if (arr[index-1] == b){
         return true;
-    } 
+    }
+    return false; 
 }
 
 let arr = [1,3,5,7];
