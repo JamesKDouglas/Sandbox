@@ -12,3 +12,15 @@ class Quark{
   }
   q1 = new Quark("red","up");
   q2 = new Quark("blue","strange");
+
+
+  //This is a nice, more DRY version someone else posted
+//   class Quark {
+//     constructor(color, flavor) {
+//       Object.assign(this, {color, flavor, baryon_number: 1 / 3});
+//     }
+  
+//     interact(quark) {
+//       [this.color, quark.color] = [quark.color, this.color];
+//     }
+//   }
