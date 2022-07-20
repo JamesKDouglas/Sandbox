@@ -13,40 +13,62 @@
 // Report the longest one.
 
 function binarray(a) {
-// count the # 0s;
-    let zeros = a.filter(0).length;
-// and the 1's
-    let ones = a.filter(1).length;
-
-    let length = a.length;//with 120 000 cycles it's nice to just calculate this once, right?
-
-    let counter;
-
-    let startIndex = 0;
-    let endIndex = 0;
-    let balancedSequences = [];
-    for (let i = 0;i<length;i++){// i is the start index for examining the array
+    let zeros = a.filter(el => el==0).length;
+    let ones = a.filter(el => el ==1).length;
+    let length = a.length;
+    let counter =0;
+    let balSeq = new Array();
+    console.log(`balancedSequences: ${balSeq}`)
+    console.log(balSeq);
+    let newArr = new Array();
+    console.log(`newArr: ${newArr}`);
+    console.log(`${newArr}`);
+    
+    for (let i = 0;i<length-2;i++){
+        console.log(balSeq);
+        console.log(`inspecting from element ${i}, which is a ${a[i]}`)
         counter = 0;
-        for (let j=0;j<(length-i);j++){//j is the increment.
-            if (a[i] == 1){
+        for (let j=i;j<(length-i);j++){
+            console.log(`enountered element ${j} with vale ${a[j]}`)
+            console.log(`counter before: ${counter}`);
+            if (a[j] == 1){
                 counter++;
             }
-            if (a[i] == 0){
+            if (a[j] == 0){
                 counter--;
             }
-            if (counter > ones || counter < -zeros){//at this point it's impossible to make balanced sequence, so stop
+            console.log(`counter after: ${counter}`);
+
+            if (counter > ones || counter < -zeros){//If this happens, at this point it's impossible to make balanced sequence, so stop
                 break;
             }
+
             if (counter == 0){
                 //found a balanced sequence!
-                let startIndex = i;
-                let endIndex = j;
-                balancedSequences.push([startIndex,endIndex]);
+                console.log(balSeq);
+                console.log(`found balanced sequence!`)
+                let el = [i,j];
+                console.log(`i: ${i} j: ${j}`)
+                balSeq.push(el);
+                console.log(balSeq);
                 break;
             }
         }
     }
 
     //Now, I should check to see if there are more than one balanced sequences.
-    //It is possible to have overlapping sequences? I think so, yes.
+    //It is possible to have overlapping sequences? I think so, yes. A larger balanced sequence may contain a smaller one.
+    // let sequence = [];
+    console.log(balSeq);
+    for (let i=0;i<balSeq.length-1;i++){
+        if (balSeq[i][1] == balSeq[i+2][0]){
+            balSeq[i] = balSeq[i].concat(balSeq[i+2]);
+        }
+    }
+    return balSeq;
 }
+
+
+//In this sequence 0,1,1,0 is the longest balanced sequence. But 0,1 is also balanced, so is 1,0. Oh 1,0 is also balanced.
+let s = [1,1,0,1,1,0,1,1];
+console.log(binarray(s));
