@@ -112,28 +112,82 @@
 //Ok the above does work, but it also times out on very large ones, taking over 12s on the codewars computer for an array 120 000 long of highly mixed zeros and ones. "big sized" is only like 8x12 maybe 100 numbers. Very big is 120 000.
 
 //Lets just clean up the code,
-function binarray(a){
-    let subArr = new Array();
-    let longestSeqLength = 0;
+// function binarray(a){
+//     let subArr = new Array();
+//     let longestSeqLength = 0;
 
-    for (let i = 0; i<=a.length;i++){//Where to start
-        for (let j = a.length-1;j>=i;j--){//now count down from the end
-            subArr = a.slice(i,j+1);//end is not included!
-            let zeros = subArr.filter(el => el == 0).length;
-            let ones = subArr.filter(el => el == 1).length;
-            if (zeros == ones){
-                if ((j-i+1) > longestSeqLength){
-                    longestSeqLength = j-i+1;
-                } 
-            }
-        }
-    }
-    return longestSeqLength;
-}
+//     for (let i = 0; i<=a.length;i++){//Where to start
+//         for (let j = a.length-1;j>=i;j--){//now count down from the end
+//             subArr = a.slice(i,j+1);//end is not included!
+//             let zeros = subArr.filter(el => el == 0).length;
+//             let ones = subArr.filter(el => el == 1).length;
+//             if (zeros == ones){
+//                 if ((j-i+1) > longestSeqLength){
+//                     longestSeqLength = j-i+1;
+//                 } 
+//             }
+//         }
+//     }
+//     return longestSeqLength;
+// }
 
 //Timeout! This algorithm work but it is too slow for a large data set. Even for an array of only 100 it takes 582ms. I suppose it runs 10 000 times in that case, which is indeed a lot.
 
 //In this sequence 0,1,1,0 is the longest balanced sequence. But 0,1 is also balanced, so is 1,0. Oh 1,0 is also balanced.
+let s = [0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1,
+    0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+    1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1,
+    1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
+    0, 0, 1, 1, 1, 0];
 // let s = [1,1,0,1,1,0,1,1];
-let s = [0,1];
+// let s = [0,1];
 console.log(binarray(s));
+
+// What I am interested in trying is the charting visualization I started with. I can't put my finger on the actual chart parameter I'm looking for though. It's some sort of maximum extent zero crossing. 
+
+//I suppose you could imagine an orthogonal scan. Make chart, then scan upwards looking for values, find the max and min indexes that those Y values appear in and report then compare them. 
+
+function binarray(a){
+    // console.log(a);
+    
+    // console.log(`# zeros: ${a.filter(el => el ==0).length} # ones: ${a.filter(el => el ==1).length}`)
+
+    //early returns
+    //The whole thing is completely balanced
+    if (a.filter(el => el ==0).length == a.filter(el => el ==1).length) return a.length;
+
+    let counter = 1;
+    let countArr = [];
+    for (i in a){
+        if (a[i] == 0){
+            counter--;
+        } else if (a[i] == 1){
+            counter++;
+        }
+        countArr.push(counter);
+    }
+    console.log(countArr);
+
+    let longestBalSeq = 0; //I don't actualy need to know the sequence or even location. Just the length.
+
+    for (let i = Math.min(...countArr);i<Math.max(...countArr);i++){
+        let startSeq;
+        let endSeq;
+
+        // let isNumi = (el) => el == i;
+        console.log(`examining the value ${i}`);
+        startSeq = countArr.indexOf(i);//If the value is not found it returns -1, which is incorrect. As written it is always not found on the first go.
+        console.log(`start: ${startSeq}`);
+        endSeq = countArr.lastIndexOf(i);
+        console.log(`end: ${endSeq}`);
+        if (endSeq-startSeq>longestBalSeq){
+            longestBalSeq = endSeq-startSeq+1;
+            console.log(`longestBalSeq ${longestBalSeq}`);
+        }
+    }
+    return longestBalSeq;
+}
+
+//An entirely different algorithm is to attempt to balance a sequence. Take a sequence. Count the zeros and ones. You know how many you need to remove in order to make it balanced. Search from the end to see if you can find a sequence that accomplishes this - has a total removal of the amount required. Search from the beginning for the same. Alternate and combine. This works well if the piece is almost balanced and it is a case where only small pieces have to be cut off the array to balance it. So that suggests routing - examine the sequence then if the balance is close, route it to this method and see if that works.
+
+//I'm about ready to give up on this problem after 3 days.
