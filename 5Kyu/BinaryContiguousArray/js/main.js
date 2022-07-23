@@ -134,13 +134,35 @@
 //Timeout! This algorithm work but it is too slow for a large data set. Even for an array of only 100 it takes 582ms. I suppose it runs 10 000 times in that case, which is indeed a lot.
 
 //In this sequence 0,1,1,0 is the longest balanced sequence. But 0,1 is also balanced, so is 1,0. Oh 1,0 is also balanced.
-let s = [0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1,
-    0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-    1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1,
-    1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
-    0, 0, 1, 1, 1, 0];
+// let s = [0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1,
+    // 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+    // 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1,
+    // 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
+    // 0, 0, 1, 1, 1, 0];
+// let s = [0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0,
+// 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+// 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
+// 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
+// 1,1, 1, 0, 1, 0];
+
+// let s = [ 0, 1, 1, 1, 1,
+// 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
+// 1]
 // let s = [1,1,0,1,1,0,1,1];
 // let s = [0,1];
+
+//expecting 24? I see 22 not 24.
+let s = [0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0,
+    1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+    0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
+    0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0,
+    1, 1, 1, 0, 1, 0]
+
+    // let s = [0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1,
+    //     1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1,
+    //     1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0,
+    //     0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1,
+    //     1, 1, 1, 0, 1, 1]
 console.log(binarray(s));
 
 // What I am interested in trying is the charting visualization I started with. I can't put my finger on the actual chart parameter I'm looking for though. It's some sort of maximum extent zero crossing. 
@@ -148,31 +170,32 @@ console.log(binarray(s));
 //I suppose you could imagine an orthogonal scan. Make chart, then scan upwards looking for values, find the max and min indexes that those Y values appear in and report then compare them. 
 
 function binarray(a){
-    // console.log(a);
+    console.log(a);
     
-    // console.log(`# zeros: ${a.filter(el => el ==0).length} # ones: ${a.filter(el => el ==1).length}`)
-
+    console.log(`# zeros: ${a.filter(el => el ==0).length} # ones: ${a.filter(el => el ==1).length}`)
+    console.log(`total size: ${a.length}`)
     //early returns
     //The whole thing is completely balanced
     if (a.filter(el => el ==0).length == a.filter(el => el ==1).length) return a.length;
 
-    let counter = 1;
+    let counter = 0;
     let countArr = [];
     for (i in a){
+        countArr.push(counter);
         if (a[i] == 0){
             counter--;
         } else if (a[i] == 1){
             counter++;
         }
-        countArr.push(counter);
+        
     }
     console.log(countArr);
 
     let longestBalSeq = 0; //I don't actualy need to know the sequence or even location. Just the length.
 
     for (let i = Math.min(...countArr);i<Math.max(...countArr);i++){
-        let startSeq;
-        let endSeq;
+        let startSeq=0;
+        let endSeq=0;
 
         // let isNumi = (el) => el == i;
         console.log(`examining the value ${i}`);
@@ -181,7 +204,7 @@ function binarray(a){
         endSeq = countArr.lastIndexOf(i);
         console.log(`end: ${endSeq}`);
         if (endSeq-startSeq>longestBalSeq){
-            longestBalSeq = endSeq-startSeq+1;
+            longestBalSeq = endSeq-startSeq;
             console.log(`longestBalSeq ${longestBalSeq}`);
         }
     }
