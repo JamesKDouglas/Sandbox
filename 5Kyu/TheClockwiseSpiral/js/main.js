@@ -35,7 +35,9 @@ function createSpiral(N) {
     let arr = new Array(N).fill(0).map(() => new Array(N).fill(0));
     console.log(arr);
 
-    for (let i=0;i<Math.sqrt(N);i++){//cycle through right, down, left up. That's one 'circle'.
+    let firstCircleFlag = true;//The first circle round has no "tail" so the right movement starts 1 position to the right further than all other times when using the circlecounter technique
+
+    for (let i=0;i<Math.sqrt(N);i++){//cycle through right, down, left up. That's one 'circle'. The 'circle' is completed when we -start- going up.
         console.log(`begin a "circle". circleLevel: ${circleLevel} i: ${i}`)
         for (let j=0;j<=3;j++){
             console.log(`direction changed, with j as ${j}`);
@@ -59,14 +61,21 @@ function createSpiral(N) {
                 moveUp();
             }
         }
-        circleLevel++;
+        
     }
 
     function moveRight(){
-        for (let k=circleLevel;k<(N-circleLevel);k++){
+        let noTail = 0;
+        if (firstCircleFlag = true){
+            noTail = 1;//shift start position 1 to the right if this is the beginning.
+        }
+
+        for (let k=circleLevel+noTail;k<(N-circleLevel);k++){
+            console.log(`filling position x: ${x}, y: ${y}`)
             arr[y][x] = counter;
             x++;
             counter++;
+            firstCircleFlag = false;
         }
     }
     function moveDown(){
@@ -79,7 +88,7 @@ function createSpiral(N) {
     }
     function moveLeft(){
         console.log(`Moving left. N is ${N} circleLevel is ${circleLevel}`);
-        for(let k=N-circleLevel;k>circleLevel;k--){
+        for(let k=N-circleLevel-1;k>circleLevel;k--){
             console.log(`fill a spot going left! x is ${x}. y is ${y} counter is ${counter}`);
             arr[y][x] = counter;
             x--;
@@ -87,16 +96,44 @@ function createSpiral(N) {
         }
     }
     function moveUp(){
-        console.log(`moving up! circleLevel is ${circleLevel}`)
-        for(let k=N-circleLevel-1;k>circleLevel+1;k--){
+        console.log(`moving up! circleLevel is ${circleLevel} N is ${N}`)
+        let startCircleLevel = circleLevel;//I want to start at y is the 
+        circleLevel++;
+        console.log(`k will start at ${N-startCircleLevel-1} and decrease until it is outside the continue condition, ${circleLevel}`)
+        console.log(`circleLevel is ${circleLevel}`)
+        for(let k=N-startCircleLevel-1;k>circleLevel;k--){
             console.log(`fill a spot going up! x is ${x}. y is ${y} counter is ${counter}`);
             arr[y][x] = counter;
             y--;
             counter++;
         }
+        x++;
+        y++;
     }
     return arr;
 }
 
 let n=4;
 console.log(createSpiral(n));
+
+// [ [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+//   [ 32, 33, 34, 35, 36, 37, 38, 39, 10 ],
+//   [ 31, 56, 57, 58, 59, 60, 61, 40, 11 ],
+//   [ 30, 55, 72, 0, 0, 0, 62, 41, 12 ],
+//   [ 29, 54, 71, 0, 0, 0, 63, 42, 13 ],
+//   [ 28, 53, 70, 0, 0, 0, 64, 43, 14 ],
+//   [ 27, 52, 69, 68, 67, 66, 65, 44, 15 ],
+//   [ 26, 51, 50, 49, 48, 47, 46, 45, 16 ],
+//   [ 25, 24, 23, 22, 21, 20, 19, 18, 17 ] ] 
+//   to deeply equal
+// [ [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+//   [ 32, 33, 34, 35, 36, 37, 38, 39, 10 ],
+//   [ 31, 56, 57, 58, 59, 60, 61, 40, 11 ],
+//   [ 30, 55, 72, 73, 74, 75, 62, 41, 12 ],
+//   [ 29, 54, 71, 80, 81, 76, 63, 42, 13 ],
+//   [ 28, 53, 70, 79, 78, 77, 64, 43, 14 ],
+//   [ 27, 52, 69, 68, 67, 66, 65, 44, 15 ],
+//   [ 26, 51, 50, 49, 48, 47, 46, 45, 16 ],
+//   [ 25, 24, 23, 22, 21, 20, 19, 18, 17 ] ]
+
+  //
