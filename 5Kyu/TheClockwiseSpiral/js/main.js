@@ -17,8 +17,15 @@
 // 10  9   8   7
 
 
-
 function createSpiral(N) {
+    if (N<1){
+        return [];
+      }
+    if (Number.isInteger(N)==false){
+        console.log("N is not an integer");
+        return [];
+    }
+
     let circleLevel = 0;
 
     let x = 0; //current position
@@ -26,94 +33,81 @@ function createSpiral(N) {
 
     let counter = 1;//number of positions filled
 
-    // let arr = new Array(N);
-
-    // for (let i=0;i<N;i++){
-    //     arr.push(new Array(N));//declare an empty array of NxN.
-    // }
-
     let arr = new Array(N).fill(0).map(() => new Array(N).fill(0));
-    console.log(arr);
+    // console.log(arr);
 
-    let firstCircleFlag = true;//The first circle round has no "tail" so the right movement starts 1 position to the right further than all other times when using the circlecounter technique
-
-    for (let i=0;i<Math.sqrt(N);i++){//cycle through right, down, left up. That's one 'circle'. The 'circle' is completed when we -start- going up.
-        console.log(`begin a "circle". circleLevel: ${circleLevel} i: ${i}`)
+    for (let i=0;i<=N/2;i++){//cycle through right, down, left up. That's one 'circle'.
+        // console.log(`begin a "circle". circleLevel: ${circleLevel} i: ${i}`)
         for (let j=0;j<=3;j++){
-            console.log(`direction changed, with j as ${j}`);
+            // console.log(`direction changed, with j as ${j}`);
             if (j==0){
-                console.log(`time to move right`);
+                // console.log(`time to move right`);
                 moveRight();
+                y++;
             } else if (j==1){
-                console.log(`time to move down`);
+                // console.log(`time to move down`);
                 moveDown();
             } else if (j==2){
-                console.log(`time to move left`);
+                // console.log(`time to move left`);
                 x--;
                 y--;
-                console.log(`x is ${x}. y is ${y}`);
+                // console.log(`x is ${x}. y is ${y}`);
                 moveLeft();
             } 
             else if (j==3){
-                console.log(`time to move up`);
+                // console.log(`time to move up`);
                 x++;
                 y--;
                 moveUp();
+                circleLevel++;
+                x=circleLevel;
+                y=circleLevel;
             }
         }
         
     }
 
+        //I have been using this 'tail' concept, but that is incorrect. The upwards movement ends in the position that would be the tail.
+        //should I set the for loop with x and y instead?
     function moveRight(){
-        let noTail = 0;
-        if (firstCircleFlag = true){
-            noTail = 1;//shift start position 1 to the right if this is the beginning.
-        }
-
-        for (let k=circleLevel+noTail;k<(N-circleLevel);k++){
-            console.log(`filling position x: ${x}, y: ${y}`)
+        for (let k=circleLevel;k<(N-circleLevel);k++){//How many positions do I fill with a right move? Well, N-circlelevel.
+            // console.log(`moving right, filling position x: ${x}, y: ${y} with ${counter}`);
             arr[y][x] = counter;
             x++;
             counter++;
-            firstCircleFlag = false;
         }
+        x--;//prevent overshoot
     }
     function moveDown(){
-        for(let k=circleLevel;k<(N-circleLevel);k++){
+        for(let k=circleLevel;k<(N-circleLevel-1);k++){
+            // console.log(`moving down, filling position x: ${x}, y: ${y} with ${counter}`);
             arr[y][x] = counter;
             y++;
             counter++;
-        }
-        
+        }  
     }
     function moveLeft(){
-        console.log(`Moving left. N is ${N} circleLevel is ${circleLevel}`);
         for(let k=N-circleLevel-1;k>circleLevel;k--){
-            console.log(`fill a spot going left! x is ${x}. y is ${y} counter is ${counter}`);
+            // console.log(`moving left, filling position x: ${x}, y: ${y} with ${counter}`);
             arr[y][x] = counter;
             x--;
             counter++;
         }
     }
     function moveUp(){
-        console.log(`moving up! circleLevel is ${circleLevel} N is ${N}`)
-        let startCircleLevel = circleLevel;//I want to start at y is the 
-        circleLevel++;
-        console.log(`k will start at ${N-startCircleLevel-1} and decrease until it is outside the continue condition, ${circleLevel}`)
-        console.log(`circleLevel is ${circleLevel}`)
-        for(let k=N-startCircleLevel-1;k>circleLevel;k--){
-            console.log(`fill a spot going up! x is ${x}. y is ${y} counter is ${counter}`);
+        // console.log(`circleLevel is ${circleLevel}`)
+        for(let k=N-circleLevel-1;k>circleLevel+1;k--){
+            // console.log(`moving up, filling position x: ${x}, y: ${y} with ${counter}`);
             arr[y][x] = counter;
             y--;
             counter++;
         }
-        x++;
         y++;
     }
     return arr;
 }
 
-let n=4;
+let n=4.5;
 console.log(createSpiral(n));
 
 // [ [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
