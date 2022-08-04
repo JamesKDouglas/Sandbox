@@ -97,10 +97,10 @@ function* paperFoldNotMutate(){
         //go through the original array and use it to create a new one.
         console.log(`Prepare to loop. arrOld is ${arrOld}, newArr is ${arrNew}`)
 
-        oldArr = arrNew.slice(0);//This line is failing. I can see that the array is not copied. Isn't this a normal way to duplicate an array?
+        oldArr = arrNew.slice(0);//This line is failing. I can see that the array is not copied. Isn't this a normal way to duplicate an array? I also tried JSON stringify method without success.
         arrNew = [];
 
-        console.log(`After swapping, oldArr is: ${arrOld}, newArr is ${arrNew}`)
+        console.log(`After swapping and clearing, oldArr is: ${arrOld}, newArr is ${arrNew}`)
        
         for(i=0;i<arrOld.length+1;i++){
             //always start with a 1.
