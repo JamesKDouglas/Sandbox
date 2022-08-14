@@ -52,8 +52,8 @@ function binarray(a){
 
     //start at the top
     let max = chartArr.reduce((a,b) => Math.max(a,b), -Infinity);
-    // console.log(max);
     let min = chartArr.reduce((a,b) => Math.min(a,b), Infinity);
+    console.log(`scanning this many lines: ${max-min}`);
 
     // console.log(`xy array generated: ${chartArr}. max: ${max} min: ${min} `);
 
@@ -127,3 +127,13 @@ console.log(`span: ${binarray(a)}`);
 // 12:35:12.417 122569
 
 //By putting logging into the codewars run code (copying this) I can see that the spans returned at 100 000 in size are takin about 100ms to run the code. So then why does a "very big" 120 000 crash it?
+// runtime before xychart: 0
+// 1660506203060
+// runtime after xychart, before scan: 5
+// 1660506203060
+// runtime after scan and span calc: 81
+// span: 114412
+
+//Ok I think what is happening is that CodeWars is submitting -many- 120k jobs. That is adding up to over 12 000 ms of runtime. Ok well I don't know how to make this code any faster. They are asking this code to run, what in 10ms? 100 is obviously too long. How many jobs are being submitted?
+
+//sigh, ok how can I make it faster? Well, about 10x the time is from the scan, this raster type scan. What can I do to more rapidly collapse that? It takes almost exactly 1ms to scan a line.
