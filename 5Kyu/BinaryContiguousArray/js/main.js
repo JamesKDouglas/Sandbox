@@ -6,17 +6,20 @@
 
 //try to put some data into local storage so I can use the same set multiple times.
 
-function genData(){//To test for timing stuff I need a largish data set.
+//rewrite using console.time? It seems to give microseconds. Whatever ms is fine. 
+
+function genData(name){
     let arr = [];
     let digit = 0;
-    for(let i=0;i<120000;i++){//I'm getting a span reported of 122569 even though I only generate 120 kb sets. I think somehow it's appending the data to the existing dataset each time it runs. The dataset is double the size that it should be, indicated by running .length;
+    for(let i=0;i<1200000;i++){
         digit = Math.round(Math.random());
         arr.push(digit);
     }
-    localStorage.setItem('a dataset', arr);
-    console.log(`robot makes a dataset!`);
+    localStorage.setItem(name, arr);
+    console.log(`robot makes a dataset named ${name}!`);
     return (`robot makes a dataset!`);
 }
+
 function printRT(start, comment){
     //timestamp to console.
     console.log(start);
@@ -44,34 +47,57 @@ function binarray(a){
         chartArr.push(yHeight);
     }
 
-    //timestamp
     printRT(startTime, "after xychart, before scan");
 
-    //now do the scan
-    // let max = Math.max(...chartArr);//This uses the apply method only works with small arrays. Reduce doesn't have that issue so lets use that here.
+    //early returns.
 
-    //start at the top
+    if (chartArr.length>100){
+        console.log(`try early return tests`)
+        
+        let spanEnd = 0;
+        for(let i=0;i<chartArr.length/2 + 1;i++){
+            if (chartArr[i] == chartArr[chartArr.length-1]){
+                spanEnd = chartArr.length - i+1;
+                printRT(startTime, "found an early return (end)");
+            }
+        }
+
+        let spanStart = 0;
+        for(let i=chartArr.length;i>chartArr.length/2 - 1;i--){
+            if (chartArr[i] == chartArr[0]){
+                spanStart = chartArr.length - i;
+                printRT(startTime, "found an early return (start)");
+            }
+        }
+
+        //
+        if (spanEnd > 0 && spanStart > 0 && spanEnd>spanStart){
+            console.log(`returning spanEnd`);
+            return spanEnd;
+        } else if (spanEnd > 0 && spanStart > 0 && spanEnd<spanStart){
+            console.log(`returning spanStart`);
+            return spanStart;
+        }
+    }
+
+    //start the main orthogonal scan
+
     let max = chartArr.reduce((a,b) => Math.max(a,b), -Infinity);
     let min = chartArr.reduce((a,b) => Math.min(a,b), Infinity);
+    
     console.log(`scanning this many lines: ${max-min}`);
 
-    // console.log(`xy array generated: ${chartArr}. max: ${max} min: ${min} `);
-
     for(let i=max;i>=min;i--){
-        //Imagine a line scans downwards. When the horizontal line intersects the xychart line it intersects with it once, twice or more. Record all those x values and put them in to an array called indexes.
- 
-        let indexes = [];
 
-        //This is too slow?
-        for(let j = 0; j < chartArr.length; j++){
-            // console.log(`building indexes array. Line is at ${i}, examining element ${j}`);
+        let indexes = [];
+        let length = chartArr.length;
+        for(let j = 0; j < length; j++){
+
             if (chartArr[j] === i){
-                // console.log(`found an intersection`);
                 indexes.push(j);
             }
         }
-        // console.log(`Done the scan. indexes is ${indexes}`);
-
+    
         let maxIndex = indexes.reduce((a,b) => Math.max(a,b), -Infinity);
         let minIndex = indexes.reduce((a,b) => Math.min(a,b), Infinity);
 
@@ -81,14 +107,11 @@ function binarray(a){
             span = newSpan;
         }
     }
-
     
     printRT(startTime, "after scan and span calc");
     console.log(`span: ${span}`);
     return span;
 }
-
-
 // a=[
 //     1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0,
 //     1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
@@ -101,39 +124,44 @@ function binarray(a){
 //     1, 0, 1, 1
 //   ];
 
-// to get a from local storage in the console
-// localStorage.getItem("a dataset");
+// let a = [
+//     0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1,
+//     0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
+//     1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0,
+//     0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0,
+//     0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1,
+//     1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1,
+//     0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1,
+//     0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1,
+//     1, 1, 0, 1
+//   ];
+    //expect 96 gets 71 with early return of start type.
+    //
+
+let a=[
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
+        0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
+        1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1,
+        1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+        1, 1, 1, 0
+      ];
+    //   expected 0 to equal 8.
+    
+// let a=[
+//         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+//         0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0,
+//         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+//         0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0,
+//         1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0,
+//         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+//         0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
+//         0, 0, 0, 0
+//       ];
+      //expect 14 got undefined.
+
 console.log(`span: ${binarray(a)}`);
-
-//These are examples, with the value at the end the expected one
-// [[[0,1], 2],
-// [[0], 0],
-// [[1,1,0,1,1,0,1,1], 4],
-// [[0,1,1,0,1,1,1,0,0,0], 10],
-// [[0,0,1,1,1,0,0,0,0,0], 6]]
-
-// This does work. However, again it is too slow and times out. How can I make it faster?
-
-//Ok my 2013 macbook pro runs this program in between 300 and 600 ms for a dataset with 240 000 elements. 
-//CodeWars is taking over 12 000 ms to run it. 
-
-// binarray(localStorage.getItem("a dataset"));
-// 12:35:11.801 main.js:22 1660505711801
-// 12:35:11.801 main.js:24 runtime before xychart: 0
-// 12:35:11.852 main.js:22 1660505711801
-// 12:35:11.852 main.js:24 runtime after xychart, before scan: 51
-// 12:35:12.407 main.js:22 1660505711801
-// 12:35:12.409 main.js:24 runtime after scan and span calc: 608
-// 12:35:12.417 122569
-
-//By putting logging into the codewars run code (copying this) I can see that the spans returned at 100 000 in size are takin about 100ms to run the code. So then why does a "very big" 120 000 crash it?
-// runtime before xychart: 0
-// 1660506203060
-// runtime after xychart, before scan: 5
-// 1660506203060
-// runtime after scan and span calc: 81
-// span: 114412
-
-//Ok I think what is happening is that CodeWars is submitting -many- 120k jobs. That is adding up to over 12 000 ms of runtime. Ok well I don't know how to make this code any faster. They are asking this code to run, what in 10ms? 100 is obviously too long. How many jobs are being submitted?
-
-//sigh, ok how can I make it faster? Well, about 10x the time is from the scan, this raster type scan. What can I do to more rapidly collapse that? It takes almost exactly 1ms to scan a line.
