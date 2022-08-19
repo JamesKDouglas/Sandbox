@@ -8,8 +8,10 @@ let str = "376668895315701798801768637391366761775802343393734618488419733333770
 let a= 267;
 let b = 906;
 findNumber(a,b,str);
+
 function findNumber(start, stop, string){
-    
+    // console.log(`${start} ${stop} ${string}`);
+
     let arr = string.split('').map(Number);//get that string into an array of numbers.
     let stringSeqDigs = new Array(10); //make an array for tallying digits from the sequence missing a number
     for (let i=0;i<=9;i++){
@@ -30,8 +32,8 @@ function findNumber(start, stop, string){
     fullSeq = fullSeq.join('').split('');
 
     //check it
-    console.log(fullSeq.length);
-    console.log(string.length);
+    // console.log(fullSeq.length);
+    // console.log(string.length);
 
     // console.log(arr);
 
@@ -40,36 +42,69 @@ function findNumber(start, stop, string){
     for (let i=0;i<fullSeq.length;i++){
         fullSeqDigs[fullSeq[i]]++;
     }
-    console.log(fullSeqDigs);
+    // console.log(fullSeqDigs);
     
     for (let i=0;i<=arr.length-1;i++){
         stringSeqDigs[arr[i]]++;
     }
-    console.log(stringSeqDigs);
+    // console.log(stringSeqDigs);
 
     //now compare then to see what digits are missing
     let missingNum = [];
     for (let i=0;i<=9;i++){
         if (stringSeqDigs[i] == fullSeqDigs[i]){
-            console.log(`all digits ${i} are present`)
+            // console.log(`all digits ${i} are present`)
             continue;
         } else {
-            console.log(`I see a ${i} missing`)
+            // console.log(`I see a ${i} missing`)
             let numMissingDigs = fullSeqDigs[i] - stringSeqDigs[i];
             for (let j=0;j<numMissingDigs;j++){
                 missingNum.push(i);
             }
-            console.log(missingNum);
+            // console.log(missingNum);
         }
     }
-    console.log(missingNum);
-    missingNum = [Number(missingNum.join(''))];//This does drop a leading zero, which isn't great
-    // missingNum.push(Number(missingNum[0].toString().split('').reverse().join('')));
-    console.log(missingNum);
+    console.log(`missing digits: ${missingNum}`);
 
-    return missingNum;
+    let perm = permute(missingNum);
+    function permute(permutation) {
+        var length = permutation.length,
+            result = [permutation.slice()],
+            c = new Array(length).fill(0),
+            i = 1, k, p;
+      
+        while (i < length) {
+          if (c[i] < i) {
+            k = i % 2 && c[i];
+            p = permutation[i];
+            permutation[i] = permutation[k];
+            permutation[k] = p;
+            ++c[i];
+            i = 1;
+            result.push(permutation.slice());
+          } else {
+            c[i] = 0;
+            ++i;
+          }
+        }
+        return result;
+      }
+
+    // missingNum = [Number(missingNum.join(''))];//This does drop a leading zero, which isn't great
+    // missingNum.push(Number(missingNum[0].toString().split('').reverse().join('')));
+    // console.log(missingNum);
+    let permJoined = [];
+    console.log(perm);
+    for (let i=0;i<perm.length;i++){
+        permJoined.push(Number(perm[i].join('')));
+    }
+    permJoined = permJoined.filter(el => (el>=start && el<=stop)).sort((a,b) => a-b);
+    // console.log(`permutations of missing digits: ${permJoined}`)
+    return permJoined;
 }
 
 //I'm done with this problem because between the above and the permutations code I solved it. However, I can see from the test program that the program is not following the instructions. For example,
 // Wrong value - Expected: [263], instead got: [236, 632]
 // the instructions state that all possible combinations must be reported. Yet, they are not doing that. So there is no possibility to solve the problem and get "points" for it in Codewars.
+
+//I think I see what's happening - of all the permutations I also have to filter out ones that are outside the range. Ok. 
