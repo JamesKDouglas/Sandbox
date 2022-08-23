@@ -17,40 +17,44 @@
 let text = 'abracadabra'
 console.log(orderedCount(text));
 
-function orderedCount(text) {
+//using object notation
+
+function orderedCount(text){
     let textArr = text.split('');
-    console.log(textArr);
+    let obsFreq = {};
 
-    let arrFreq = new Array(new Array);
-
-    console.log(arrFreq);
-
-    for (let i=0;i<text.length;i++){
-        console.log(`looking at letter ${textArr[i]} index ${i}`)
-        let index = arrFreq.findIndex(el => (el[0] == textArr[i]));//find the letter index in the array
-        console.log(`index is ${index}`);
-
-        if(index == -1){
-            //we're seeing the letter for the first time
-            console.log(`ooh a  letter I haven't seen`)
-            arrFreq.push([textArr[i], 1]);
-        }
-        if (index !== -1){
-            //just need to increment the counter
-            console.log(`a letter I have seen before!`)
-            let letterCount = arrFreq[index];//extract count array
-            console.log(arrFreq[index]);
-            let count = letterCount[1];//extract the actual count
-            let letter = letterCount[0];
-            console.log(`I've seen ${count} of these before`)
-            count++;//increment
-            arrFreq[index] = [letter, count];//rewrite with new count
-            console.log(arrFreq[index]);
-
-        }
+    for (let i=0;i<textArr.length;i++){
+        if (!obsFreq[textArr[i]]){//Note how angle brackets are required here because then evaluation takes place before the key is looked up.
+            obsFreq[textArr[i]] = 1;
+        }else{
+            obsFreq[textArr[i]]++;
+        };
     }
-    arrFreq.shift();
+    return obsFreq;
+}
+//using an array, which is a type of object of course:
+// function orderedCount(text) {
+//     let textArr = text.split('');
+//     let arrFreq = new Array(new Array);
 
+//     for (let i=0;i<text.length;i++){
+//         let index = arrFreq.findIndex(el => (el[0] == textArr[i]));//find the letter index in the array
 
-    return arrFreq;
-  }
+//         if(index == -1){
+//             //we're seeing the letter for the first time
+//             arrFreq.push([textArr[i], 1]);
+//         }
+//         if (index !== -1){
+//             //just need to increment the counter
+//             let letterCount = arrFreq[index];//extract count array
+//             let count = letterCount[1];//extract the actual count
+//             let letter = letterCount[0];
+//             count++;//increment
+//             arrFreq[index] = [letter, count];//rewrite with new count
+
+//         }
+//     }
+//     arrFreq.shift();
+
+//     return arrFreq;
+//   }
