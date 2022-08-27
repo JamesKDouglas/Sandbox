@@ -10,17 +10,22 @@
 
 function fakeBin(x){
     let arr = x.split("");
-    // arr.map(el=>(el >= 5) ? 1 : 0);
-    let newArr = [];
-    for (let i=0;i<arr.length;i++){
-        if (arr[i]>=5){
-            newArr.push(1);
-        } else {
-            newArr.push(0);
-        }
-    }
-    return newArr.join("");
+    return arr.map(el=>el >= 5 ? 1 : 0).join('');//remember map is non-mutating. It returns an array.
+    
+     // let newArr = [];
+    // for (let i=0;i<arr.length;i++){
+    //     if (arr[i]>=5){
+    //         newArr.push(1);
+    //     } else {
+    //         newArr.push(0);
+    //     }
+    // }
+    // return newArr.join("");
 }
 
 x="55154";
 console.log(fakeBin(x));
+
+//function fakeBin(x) {
+//     return x.split('').map(n => n < 5 ? 0 : 1).join('');
+// }
