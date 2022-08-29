@@ -1,62 +1,82 @@
+//can a palindrome be constructed from the string?
 
-// If a string contains doubles of all letters then it's a possible palindrome.
-  //So just count the appearance of all pairs. The second time a letter is paired,
-  //it fails as a palindrome
+//ex:
+//madam => true
+//junk => false
 
-function permuteAPalindrome (input) { 
-    console.log(`input: ${input}`);
+//If there is 1 unmatched letter and also an odd number of letters then yes a palindrome can be constructed.
+// If there are 0 unmatched letters then also yes.
 
-    let length = input.length;
-    let arr = input.split("");
-    let unMatched = 0;
-    let counter = 1;
+//otherwise no. Any more than 1 unmatched letter and it's not possible to make a palindrome. 
+//Also if there is one unmatched letter and the total number of letters is even, it's still not possible.
 
-    for (let i=0;i<arr.length+1;i++){
-     console.log(`looking at the first letter for the ${i}th time. It is a ${arr[0]}`);
+//try to use string methods here:
+//Look up the first character with charAt(0);
+//Compare it to each next characters with charAt(j);
+//Count how many times the character appears. Remove each letter as it is counted/matched. Use slice for that (begin, end).
+//If it appears an uneven number of times, increment unMatched.
+//remove the first letter.
+//repeat, going through all the letters and seeing how many are unmatched.
+//At the end of each letter:
+// check to see if unmatched is 2 or over 2. If it is just return false.
+// 
 
-      //for all the letters that occur, count then remove them.
-      counter = 1;
-      for (let j=1;j<arr.length;j++){
-        console.log(`examining arr: ${arr}`);
-        console.log(`comparing ${arr[0]} to ${arr[j]}`);
-  
-        if (arr[0] == arr[j]){
-          counter++;
-          console.log(`letter counter for ${arr[0]} just incremented to ${counter}`)
-          arr.splice(j,1);
-          j--;//Compensate for loss of length from splice. This is important if there are adjacent characters
-        }
-      }
-      //Remove letter from the front so we can track the next one.
-      arr.shift();     
-      
-      console.log(`letter counter modulo 2: ${counter%2}`);
-      if (counter%2 == 0){} else {
-        unMatched++;
-        console.log(`unmatched pair logged. unMatched just incremented to: ${unMatched}`);
-      }; 
+// let input = "racecars";
+let input = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbczazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazazaza
 
-      console.log(`unMatched: ${unMatched}, length: ${length}`)
 
-      if (unMatched>=2 || unMatched>0 && length%2==0){
-        return false;
-      }
-    }   
+function permuteAPalindrome (input){
+  //early returns
+  if (input.length == 1) return true;
+  if (input.length == 0) return true;
+
+  let inputPrime = input;
+  let length = input.length;
+  let letterCounter = 1;
+  let unMatchedCount = 0;
+  let currentLength = 0;
+
+  //Count how many letters of each they are, one at a time. 
+  do {
+    //One loop for each letter.
+    letterCounter = 1;
+    currentLength = inputPrime.length;//changes after every letter is inspected.
+
+    for (let j=1;j<currentLength;j++){//compare it to all the rest;
+      if (inputPrime.charAt(0) == inputPrime.charAt(j)){
+        letterCounter++;
+        inputPrime = inputPrime.slice(0,j) + inputPrime.slice(j+1);//remove it so we don't match it again.
+        j--;//don't skip a letter!
+
+      } else {
+      };
+    }
+    
+    //Is this letter appearing an odd number of times.
+
+    if (letterCounter%2 !=0){
+      unMatchedCount++;
+    }
+    
+    //So far, given the number of unmatched letters and string length is this able to make a valid palindrome?
+    if (unMatchedCount == 1 && length%2 == 0){
+      return false;
+    } else if (unMatchedCount > 1){
+      return false;
+    }
+    inputPrime = inputPrime.slice(1);//Remove the first character.
+  } while (inputPrime.length>0);
+
   return true;
 }
 
-// let input = "qllffxllqlff";
-//expecting false, got true.
-
-// let input = "ijewirigiqtofbuvilftviqodjermkvglcmddibwvcwuoiwkd" 
-//Expected: true, instead got: false
-
-// let input = "haqamjhvjscgpgxhbjccsbocjxjmjpovq" 
-// Expected: true, instead got: false
-
-let input = "racecars";
-
-// let input = 'a';
-
-//There are 12 characters and 1 unmatched so it is indeed not a palindrome. That is tested first, before the fact that we notice there are 5 l's and 1 x.
 console.log(permuteAPalindrome(input));
+
+
+//a more succinct solution from smatric:
+// function permuteAPalindrome ([...input], odd = 0) { 
+//   new Set(input).forEach(a => input.filter(b => b == a).length % 2 ? odd++ : 0)
+//   return odd < 2;
+// }
+//However, this version uses arrays, and I'm practicing with strings.
