@@ -4,7 +4,10 @@
 // Another is the initial string with 4 periods inserted before the newline. Then a concatenation of the original array reflecte in the vertical and horizontal planes (clockwise rotation 180 degrees) with 4 periods in front of the line. Then on the end of each line insert are 4 periods. This one has some nickname "selfie". 
 // example of the selfie and Rot:
 // s = "abcd\nefgh\nijkl\nmnop" --> 
-// "abcd....\nefgh....\nijkl....\nmnop....\n....ponm\n....lkji\n....hgfe\n....dcba"
+// "abcd....\n
+//  efgh....\n
+//  ijkl....\n
+//  mnop....\n....ponm\n....lkji\n....hgfe\n....dcba"
 //
 // "abcd....\n
 //  efgh....\n
@@ -24,13 +27,42 @@
 let s = "abcd\nefgh\nijkl\nmnop";
 
 function rot(strng) {
-    // // your code
-    let line = "";
-    let breaks  = [];
-    // find all the line breaks
-    // I can't figure a method that just retrieves them so i'll have to disassemble the string.
-    return strng.match(/(?<=\n)\d[^\n]*/);
+    //Backlashes are hard to handle so replace with |
+    let text = strng.replace(/\n/g, '|');
+    let sqrLength;
+    let newText = "";
 
+    //strings are always a square so just get the dimensons. It would also be possible to just count the total characters and calculate.
+    for (let i=0;i<strng.length;i++){
+        if (text[i] == "|") {
+            sqrLength = i;
+            break;
+        }
+    }
+    console.log(text);
+    //trying to do this without arrays!
+    let firstLetter, secondLetter = "";
+    let address;
+    for (let i=0;i<sqrLength;i++){
+        lineStartAddress = i*sqrLength;
+        if (i>0) lineStartAddress+=i;//to skip the |
+        console.log(`examining line ${i}, so address ${lineStartAddress}`)
+        for (let j=0;j<Math.ceil(sqrLength/2);j++){
+
+            firstLetter = text[lineStartAddress+j];
+            secondLetter = text[lineStartAddress + (sqrLength - j-1)];
+            console.log(`looking at letters first: ${firstLetter} second: ${secondLetter}`);
+
+            newText = text.substring(0, lineStartAddress+j) + secondLetter + text.substring(lineStartAddress+j+1);
+            console.log(`newText after adding first letter ${newText}`);
+
+            console.log(`first half of substring: ${newText.substring(0, lineStartAddress + (sqrLength - j-1))}`);
+            console.log(`second half of substring: ${newText.substring(lineStartAddress+sqrLength-j)}`);
+            newText = newText.substring(0, lineStartAddress + (sqrLength - j-1)) + firstLetter + newText.substring(lineStartAddress+sqrLength-j);
+            console.log(`newText after adding second letter ${newText}`);
+        }
+    }
+    console.log(`text ${newText}`);
     
 }
 
