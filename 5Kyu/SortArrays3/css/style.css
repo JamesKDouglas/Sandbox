@@ -11,9 +11,7 @@
 /* LAYOUT
 /*******************************************/
 
-span::selection{
-  background-color:red;
-}
+
 
 /******************************************
 /* ADDITIONAL STYLES

@@ -18,10 +18,10 @@
 //I use a custom timing function but console.time() could be helpful here.
 
 //Make a data set I can use.
-function genData(name){
+function genData(name, size){
     let arr = [];
     let digit = 0;
-    for(let i=0;i<1200000;i++){
+    for(let i=0;i<size;i++){
         digit = Math.round(Math.random());
         arr.push(digit);
     }
@@ -43,7 +43,7 @@ function printRT(start, comment){
 //The main bit
 function binarray(a){
     let span = 0;
-    let chartArr = [0];
+    let chartArr = [];
     let yHeight = 0;
 
     const startTime = Date.now();
@@ -58,50 +58,57 @@ function binarray(a){
         if(a[i] == 1){
             yHeight++;
         }
-        chartArr.push(yHeight);
+        chartArr.push([yHeight,i]);
     }
 
-    printRT(startTime, "after xychart, before scan");
+    printRT(startTime, "after xychart, before processing");
 
+    chartArr.sort(sortFunction);
+    console.log(chartArr);
     
-    let max = chartArr.reduce((a,b) => Math.max(a,b), -Infinity);
-    let min = chartArr.reduce((a,b) => Math.min(a,b), Infinity);
+    //Now I want to detect duplicates.
 
-    console.log(`scanning this many lines: ${max-min}`);
-    console.log(`xy chart array: ${chartArr}`);
+    //The goal here is to simply go through the array and look for duplicate entries in the chartArr for the first dimension element. That represents a horizontal line that intersects in at least two points.
 
-    let lineScanTime, lineScanTimeAcc =0;
-    for(let i=max;i>=min;i--){
+    //But the algorithm must also continue because there is likely to be more than one intersection point. Right now it only can compare two intersection points.
 
-        let indexes = [];
-        let length = chartArr.length;
-
-        lineScanTime = Date.now();
-
-        for(let j = 0; j < length; j++){
-
-            if (chartArr[j] === i){
-                indexes.push(j);
+    console.time();
+    let start, end;
+    for (let i = 0;i<chartArr.length-1;i++){
+        if (chartArr[i][0] == chartArr[i+1][0]){
+            // console.log(`found an intersection!`);
+            start = chartArr[i][1];
+            //now look for the end
+            for (let j=i+2;j<chartArr.length;j++){
+                if (chartArr[i][0] != chartArr[j][0]){
+                    end = chartArr[j-1][0];
+                }
             }
         }
-        lineScanTimeP = Date.now();
-        lineScanTimeAcc += lineScanTimeP-lineScanTime;
-
-        //These arrays are quite small, so even though reduce is half the speed of a for loop this doesn't take much time.
-        let maxIndex = indexes.reduce((a,b) => Math.max(a,b), -Infinity);
-        let minIndex = indexes.reduce((a,b) => Math.min(a,b), Infinity);
-
-        let newSpan = maxIndex-minIndex;
-
-        if (newSpan>span){
-            span = newSpan;
+        if (start-end>span){
+            // console.log(`update span`)
+            span = start-end;
         }
     }
+    console.timeEnd();
+
+    //This is even slower! I'm not sure why it's so slow but it takes 19s for 20 000 points. ok Math.abs is slow now it takes 1.3s but the span is incorrectly calculated as 35! reversing start and end gives ... a different number. I'm not really sure what the correct number is anymore. 
+
+    //Well, it's a good idea but it's not really working right now. Next time, try with a better characterized dataset and see if you can address the magnitude issue (by better sorting?).
     
-    printRT(startTime, "after scan and span calc");
-    console.log(`total time spent scanning lines with the for loop: ${lineScanTimeAcc}`);
+    function sortFunction(a, b) {
+        if (a[0] === b[0]) {
+            return (a[1] < b[1]) ? -1 : 1;
+        }
+        else {
+            return (a[0] < b[0]) ? -1 : 1;
+        }
+    }
+
     console.log(`span: ${span}`);
     return span;
+
+
 }
 // a=[
 //     1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0,
@@ -157,6 +164,6 @@ let a=[
 
 //console.log(`span: ${binarray(a)}`);
 
-let data = localStorage.getItem("big set string");
+let data = localStorage.getItem("smallSet");
 data = JSON.parse(data.trim());
 console.log(`detected max balanced binary sequence in dataset from localStorage: ${binarray(data)}`)

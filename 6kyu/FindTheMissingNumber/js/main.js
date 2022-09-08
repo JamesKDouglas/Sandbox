@@ -67,6 +67,8 @@ function findNumber(start, stop, string){
     console.log(`missing digits: ${missingNum}`);
 
     let perm = permute(missingNum);
+
+    //this function is a bit messed up, it returns duplicates and also reports leading zero combinations, which is incorrect for this purpose.
     function permute(permutation) {
         var length = permutation.length,
             result = [permutation.slice()],
@@ -93,12 +95,34 @@ function findNumber(start, stop, string){
     // missingNum = [Number(missingNum.join(''))];//This does drop a leading zero, which isn't great
     // missingNum.push(Number(missingNum[0].toString().split('').reverse().join('')));
     // console.log(missingNum);
+
+    //perm is all the permutations. Sometimes it contains duplicates, numbers outside the range and some sequences have leading zeros. All of those have to be cleaned up
+
+    //clean up leading zeros
+    for (i in perm){
+        if (perm[i][0] ==0){
+            perm.splice(i,1);//delete the entry if there is a leading zero.
+        }
+    }
+
+    //filter out duplicates
+    for (j in perm){
+        for (i in perm){
+            if (perm[j] == perm[i]){
+                perm.splice(j,1);
+            }
+        }
+    }
+
     let permJoined = [];
     console.log(perm);
     for (let i=0;i<perm.length;i++){
         permJoined.push(Number(perm[i].join('')));
     }
+
+    //clean up for range
     permJoined = permJoined.filter(el => (el>=start && el<=stop)).sort((a,b) => a-b);
+    
     // console.log(`permutations of missing digits: ${permJoined}`)
     return permJoined;
 }

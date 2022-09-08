@@ -231,3 +231,35 @@ let a=[
       //expect 14 got undefined.
 
 console.log(`span: ${binarray(a)}`);
+
+
+//old scan function ( too slow )
+
+
+// let lineScanTime, lineScanTimeAcc =0;
+// for(let i=max;i>=min;i--){//From the top down.
+
+//     let indexes = [];
+//     let length = chartArr.length;
+
+//     lineScanTime = Date.now();
+
+//     for(let j = 0; j < length; j++){
+
+//         if (chartArr[j] === i){
+//             indexes.push(j);
+//         }
+//     }
+//     lineScanTimeP = Date.now();
+//     lineScanTimeAcc += lineScanTimeP-lineScanTime;
+
+//     //These arrays are quite small, so even though reduce is half the speed of a for loop this doesn't take much time.
+//     let maxIndex = indexes.reduce((a,b) => Math.max(a,b), -Infinity);
+//     let minIndex = indexes.reduce((a,b) => Math.min(a,b), Infinity);
+
+//     let newSpan = maxIndex-minIndex;
+
+//     if (newSpan>span){
+//         span = newSpan;
+//     }
+// }
