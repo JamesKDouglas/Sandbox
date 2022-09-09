@@ -235,7 +235,6 @@ console.log(`span: ${binarray(a)}`);
 
 //old scan function ( too slow )
 
-
 // let lineScanTime, lineScanTimeAcc =0;
 // for(let i=max;i>=min;i--){//From the top down.
 

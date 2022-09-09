@@ -63,7 +63,7 @@ sortme = function( courses ){
         } else if (split[i][1].toString().length == 2){
             split[i] =  split[i][0] + "-" + "0" + "0" + split[i][1];
         } else if (split[i][1].toString().length == 1){
-            split[i] =  split[i][0] + "-" + "0" + "0" + "0" + split[i][1];//I could have used the repeat string here to add leading zeros.
+            split[i] =  split[i][0] + "-" + "0" + "0" + "0" + split[i][1];//I could have used the repeat string method here to add leading zeros.
         } else {
             split[i] = split[i][0] + "-" + split[i][1];
         }
