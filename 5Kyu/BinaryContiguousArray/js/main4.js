@@ -1,4 +1,8 @@
+
 //edit: This is still too slow. There is one array that I search repeatedly for matching values. Can I store that array as a dataset that is easier to search, like in a heap or trie. Trie is the fastest, I could potentially organize the array just by digit.
+//sept 9 2022 note: Consider starting the line scan in the center of the range.
+// right now I start it at the top, but statistically speaking I expect the abundance to be a normal distribution (from random data - it is possibe to have a dataset that is not random of course). So starting the search in the center will more quickly find the largest balanced range.
+//The thing is, it's rather hard to tell that it's the longest. Great that you found it first but you still have to show it as the longest?
 
 //pseudocode:
 //Lets try again with that orthogonal analysis. This is considered dynamic programming. 
