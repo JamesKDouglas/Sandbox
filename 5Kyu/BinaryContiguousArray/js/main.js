@@ -1,22 +1,3 @@
-//edit: This is still too slow. There is one array that I search repeatedly for matching values. Can I store that array as a dataset that is easier to search, like in a heap or trie. Trie is the fastest, I could potentially organize the array just by digit.
-
-//Also I'd like to try to use chart.js to visualize this data, just for practice and because it could help solve this..
-//pseudocode:
-//This uses "orthogonal analysis". This is considered dynamic programming. 
-//In dynamic programming you take the data you want to examine then generate some sort of like meta data. Then analyze the meta data. 
-
-//I'm a scientist who often uses charts, so lets try to solve this rather the way a human would with a chart.
-
-//Generate the chart by going through the array and generate a second array that tracks the balance of the first. This is the meta data, a sort of running sum. Score 1 for a 1 and -1 for a zero. The counter value gets put into the new array. This represents a line chart with position as x and value as y. 
-
-//Scan from the maximum chart value downwards (or min upwards). Imagine this as drawing a horizontal line through the generated chart and moving it down, scanning to see where it intersects the chart line. 
-
-//The maximum span of intersection of a horizontal line with the chart line represents the span of the longest balanced binary sequence. When multiple X values are found for a given Y then the line is intersecting multiple times. All of these intersections go into an array then I take the min, max indexes and calculate the span.  Test to see if it is longer than any previous sequences by comparing the previous longest span. If it is longer, rewrite the old span length.
-
-//P.S. I put some data into local storage so I can use the same set multiple times.
-
-//I use a custom timing function but console.time() could be helpful here.
-
 //Make a data set I can use.
 function genData(name, size){
     let arr = [];
@@ -32,23 +13,12 @@ function genData(name, size){
     return (`robot makes a dataset!`);
 }
 
-//Print runtime of an enclosed piece of code
-function printRT(start, comment){
-    //timestamp to console.
-    console.log(start);
-    let elapsedTime = Date.now() - start;
-    console.log(`runtime ${comment}: ${elapsedTime}`);
-}
 
 //The main bit
 function binarray(a){
     let span = 0;
     let chartArr = [];
     let yHeight = 0;
-
-    const startTime = Date.now();
-
-    printRT(startTime, "before xychart");
 
      //make the xy chart
     for (let i=0;i<a.length;i++){
@@ -58,112 +28,110 @@ function binarray(a){
         if(a[i] == 1){
             yHeight++;
         }
-        chartArr.push([yHeight,i]);
+        chartArr.push([i,yHeight]);
     }
-
-    printRT(startTime, "after xychart, before processing");
-
-    chartArr.sort(sortFunction);
-    console.log(chartArr);
+    console.log(`original data: ${a}`);
+    console.log("chartArr", chartArr);
     
-    //Now I want to detect duplicates.
+    //#1
+    //the bin array will look something like this
+    // [[0, 10, 14], [10, 15, 17]]
+    // In this case 0 is the start of the bin, and the bins are a size of 10 long.
+    // The lowest value in the x range 0 to 10 is 10, the highest is 14.
 
-    //The goal here is to simply go through the array and look for duplicate entries in the chartArr for the first dimension element. That represents a horizontal line that intersects in at least two points.
+    // Note that this may mean the second section, the 10 section, starts at either 13 or 15. Or, it could be that the height is in the center of the bin. 
+    
+    //Note that the travel or Y range is limited by the bin size. The range cannot be larger than the bin size.
 
-    //But the algorithm must also continue because there is likely to be more than one intersection point. Right now it only can compare two intersection points.
+    //After the binned array is prepared, go through the bins and identify which one contains a section that will have an intersection.
 
-    console.time();
-    let start, end;
-    for (let i = 0;i<chartArr.length-1;i++){
-        if (chartArr[i][0] == chartArr[i+1][0]){
-            // console.log(`found an intersection!`);
-            start = chartArr[i][1];
-            //now look for the end
-            for (let j=i+2;j<chartArr.length;j++){
-                if (chartArr[i][0] != chartArr[j][0]){
-                    end = chartArr[j-1][0];
-                }
+    //The comparison will look like this:
+    //Sort the bins by the start. 
+    //start the for loop:
+    //select an element.
+    //compare the upper range of the 
+
+    //After identifying the bin we need to go into the original array and determine the actual location.
+
+    //for example, we will go through the array,
+    //[[0, 10, 20], [10, 15, 21], [20, 15, ]]
+
+    //and notice that 
+
+
+    ///----#2
+    //bins look like this:
+    //Bin 1: from min to min+10.
+    //Bin 1 contains all of the points with corresponding y values between min and min+10. So it is a 2D array, containing points.
+    //So we process the binary once, into a chart, then process the chart once. 
+    //After the bins are made, examine them:
+    //Calculate the max span in bin 1.
+    //Calculate the max span in bin 2. Abort the calculation if the span value is smaller than already found.
+
+    //etc. for all bins
+
+    //So we have 3 different scans. Doing so we avoid the uselessness of checking each element against every other to find the span. We take advantage of the fact that the slope can only be 1:1, so bins can be used.
+
+    //do some binning.
+    let chartArrCopy = chartArr.slice();
+    let binSize = 10;
+    console.log("chartArr size:", chartArrCopy.length)
+    let binnedData = [];
+
+    // console.log('empty binned data arr', binnedData);
+
+    //This doesn't work. There should be a maximum of 200 bins if there are 20 000 data points. The console suggests that is working, but the resultant bin array contains an incorrect number of points - 2669. If length is reporting all the points it should be 20000 in size. If it's only the bins it should be 200 max.
+
+    //ok one of the complications is that binning has to start at a negative value. 
+    let yVals = chartArr.map(el => el[1]);
+    let min = yVals.reduce((a,b) => Math.min(a,b), Infinity);
+    console.log('minimum value in xychart', min);
+
+    for (let i=0;i<chartArrCopy.length/binSize;i++){//Choose the bin #. This is not the same as the start location of the bin because bins start at negative values.
+        console.log(`adding to bin ${i}`);
+        binnedData.push([]);//make an empty bin
+
+        for (let j=0;j<chartArrCopy.length;j++){//Scan the data. I speed this scanning by taking the point out of the array once the point is binned.
+            console.log("examining element with Y value:", chartArrCopy[j][1]);
+            if (chartArrCopy[j][1]<(min+(i+1)*binSize) && chartArrCopy[j][1]>=(min+i*binSize)){
+                console.log(`Put ${chartArrCopy[j]} into bin # ${i}`);
+                binnedData[i].push(chartArrCopy[j]);
+                chartArrCopy.splice(j,1);//delete element
+                j--;//correct j after deletion
             }
         }
-        if (start-end>span){
-            // console.log(`update span`)
-            span = start-end;
-        }
+        console.table(`Contents of bin ${i}`, binnedData[i]);
     }
-    console.timeEnd();
+    console.log("binnedData", binnedData);
 
-    //This is even slower! I'm not sure why it's so slow but it takes 19s for 20 000 points. ok Math.abs is slow now it takes 1.3s but the span is incorrectly calculated as 35! reversing start and end gives ... a different number. I'm not really sure what the correct number is anymore. 
+    //Now write something to scan each bin
 
-    //Well, it's a good idea but it's not really working right now. Next time, try with a better characterized dataset and see if you can address the magnitude issue (by better sorting?).
-    
-    function sortFunction(a, b) {
-        if (a[0] === b[0]) {
-            return (a[1] < b[1]) ? -1 : 1;
-        }
-        else {
-            return (a[0] < b[0]) ? -1 : 1;
-        }
-    }
+
+    // console.time('scan');
+    // let start, end;
+    // for (let i = 0;i<chartArr.length-1;i++){
+    //     if (chartArr[i][0] == chartArr[i+1][0]){
+    //         // console.log(`found an intersection!`);
+    //         start = chartArr[i][1];
+    //         //now look for the end
+    //         for (let j=i+2;j<chartArr.length;j++){
+    //             if (chartArr[i][0] != chartArr[j][0]){
+    //                 end = chartArr[j-1][0];
+    //             }
+    //         }
+    //     }
+    //     if (start-end>span){
+    //         // console.log(`update span`)
+    //         span = start-end;
+    //     }
+    // }
+    // console.timeEnd('scan');
 
     console.log(`span: ${span}`);
     return span;
 
-
 }
-// a=[
-//     1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0,
-//     1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1,
-//     1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0,
-//     1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0,
-//     0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1,
-//     1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-//     1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1,
-//     0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1,
-//     1, 0, 1, 1
-//   ];
 
-// let a = [
-//     0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1,
-//     0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
-//     1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0,
-//     0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0,
-//     0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1,
-//     1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1,
-//     0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1,
-//     0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1,
-//     1, 1, 0, 1
-//   ];
-    //expect 96 gets 71 with early return of start type.
-    //
-
-let a=[
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
-        1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1,
-        1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
-        1, 1, 1, 0
-      ];
-    //   expected 0 to equal 8.
-    
-// let a=[
-//         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-//         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-//         0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0,
-//         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-//         0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0,
-//         1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0,
-//         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-//         0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
-//         0, 0, 0, 0
-//       ];
-      //expect 14 got undefined.
-
-//console.log(`span: ${binarray(a)}`);
-
-let data = localStorage.getItem("smallSet");
+let data = localStorage.getItem("smallerSet");
 data = JSON.parse(data.trim());
 console.log(`detected max balanced binary sequence in dataset from localStorage: ${binarray(data)}`)
