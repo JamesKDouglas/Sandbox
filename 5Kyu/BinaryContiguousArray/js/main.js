@@ -16,7 +16,7 @@ function genData(name, size){
 
 //The main bit
 function binarray(a){
-    let span = 0;
+    console.time('overall');
     let chartArr = [];
     let yHeight = 0;
 
@@ -30,8 +30,8 @@ function binarray(a){
         }
         chartArr.push([i,yHeight]);
     }
-    console.log(`original data: ${a}`);
-    console.log("chartArr", chartArr);
+    // console.log(`original data: ${a}`);
+    // console.log("chartArr", chartArr);
     
     //#1
     //the bin array will look something like this
@@ -74,8 +74,8 @@ function binarray(a){
 
     //do some binning.
     let chartArrCopy = chartArr.slice();
-    let binSize = 10;
-    console.log("chartArr size:", chartArrCopy.length)
+    let binSize = 50;
+    // console.log("chartArr size:", chartArrCopy.length)
     let binnedData = [];
 
     // console.log('empty binned data arr', binnedData);
@@ -85,28 +85,63 @@ function binarray(a){
     //ok one of the complications is that binning has to start at a negative value. 
     let yVals = chartArr.map(el => el[1]);
     let min = yVals.reduce((a,b) => Math.min(a,b), Infinity);
-    console.log('minimum value in xychart', min);
-
+    // console.log('minimum value in xychart', min);
+    console.time('binningProcess');
     for (let i=0;i<chartArrCopy.length/binSize;i++){//Choose the bin #. This is not the same as the start location of the bin because bins start at negative values.
-        console.log(`adding to bin ${i}`);
+        // console.log(`adding to bin ${i}`);
         binnedData.push([]);//make an empty bin
-
-        for (let j=0;j<chartArrCopy.length;j++){//Scan the data. I speed this scanning by taking the point out of the array once the point is binned.
-            console.log("examining element with Y value:", chartArrCopy[j][1]);
+        let length = chartArrCopy.length;
+        for (let j=0;j<length;j++){//Scan the data. I speed this scanning by taking the point out of the array once the point is binned.
+            // console.log("examining element with Y value:", chartArrCopy[j][1]);
             if (chartArrCopy[j][1]<(min+(i+1)*binSize) && chartArrCopy[j][1]>=(min+i*binSize)){
-                console.log(`Put ${chartArrCopy[j]} into bin # ${i}`);
+                // console.log(`Put ${chartArrCopy[j]} into bin # ${i}`);
                 binnedData[i].push(chartArrCopy[j]);
-                chartArrCopy.splice(j,1);//delete element
-                j--;//correct j after deletion
+                // chartArrCopy.splice(j,1);//delete element
+                // j--;//correct j after deletion
+                // length--;
             }
         }
-        console.table(`Contents of bin ${i}`, binnedData[i]);
+        // console.table(`Contents of bin ${i}`, binnedData[i]);
     }
-    console.log("binnedData", binnedData);
+    console.timeEnd('binningProcess');
+    console.time('spanCalc');
+    // console.log("binnedData", binnedData);
+    let span =0;
+    let tempSpan=0;
 
-    //Now write something to scan each bin
+    let yLine = 0;
+    let tempyLine = 0;
+    let offset =0;
+    let ind = 0;
+    //Now write something to scan each bin. This helps because effectively what happens is we skip a lot of the scanning useless values.
+    for (let k=0;k<binnedData.length;k++){//Select the bin
+        let binSize = binnedData[k].length;
+        for (let i=0;i<binSize;i++){//Select the starting point
+            for (let j=i+1;j<binSize-i;j++){//Select the comparison point
+                ind = binnedData[k][i][0];
+                    // console.log('index', ind);
+                    if (a[ind] == 0){
+                        offset = -1;
+                    } else {
+                        offset = 1 ;
+                    }
+                    // console.log(`first element is a ${a[ind]}  so offset is:`, offset);
 
-
+                if (binnedData[k][i][1] == binnedData[k][j][1]+offset) {
+                    tempSpan = binnedData[k][j][0] - binnedData[k][i][0] + 1;
+                    // console.log(`first element index is a ${binnedData[k][i][0]}. second element index is ${binnedData[k][j][0]}  so span is:`, tempSpan);
+                    tempyLine = binnedData[k][i][1];
+                }
+            }
+            if (tempSpan>span) {
+                span = tempSpan;
+                yLine = tempyLine;
+            }
+        }
+    }   
+    console.timeEnd('spanCalc');
+    // console.log(span);
+    // console.log(yLine);
     // console.time('scan');
     // let start, end;
     // for (let i = 0;i<chartArr.length-1;i++){
@@ -128,10 +163,36 @@ function binarray(a){
     // console.timeEnd('scan');
 
     console.log(`span: ${span}`);
+    console.timeEnd('overall')
     return span;
 
 }
 
-let data = localStorage.getItem("smallerSet");
-data = JSON.parse(data.trim());
+//I'm gettin 353ms for a 20 000 element set.
+//big set string takes way too long.
+//also way too long with a 200 000 byte long set. 14.7s.
+// Of course it varies. Overall 18.2s, spancalc only takes 1.5s. 
+// Overall 11.5s, binning 10s, spancalc 1.5s.
+
+//So yes the binning speeds up the scan but the binning itself is too slow!
+//Why is it so slow? I'm only going through the array once.
+//The bin size does have a substantial, roughly linear effect on binning speed. 100 is about 10x the speed.
+//But then the scanning takes longer!
+//Balancing them does help but I don't know if it will be sufficient. the 200 000 dataset can be finished in about 9s with bin size 50.
+
+//Ugh, binning fails because it can't process small datasets.
+
+//The "very big size" is actually 200 000 or so, so I am actually doing it fast enough here. 
+//But it is also calculating the span incorretly, sometimes. 
+
+// Yes I incorrectly calculate the span. The array [0,1] should return a span of 2. However, when I make the xychart it will result in [[0,-1],[1,0]] which returns a span of zero. So that's an offset of one error.
+//When we are calculating the span I could detect if the first element is a 0. If it is offset should be -1. If it is a 1 offset should be +1. Offset is applied to the second point only. So [0,1] will give an xy of [[0,-1],[1,-1]]. The modification happens when when we calculate the span. [1,0] will give an xy of [[0,1],[1,1]]
+
+//I should try literally just counting the 0's and one's. Enough of this xychart stuff.
+// let data = localStorage.getItem("midSizedSet");
+// data = JSON.parse(data.trim());
+
+//I tried fixing this offset error but I can't get it. And it's still timing out.
+
+let data = [0,1,0,1];
 console.log(`detected max balanced binary sequence in dataset from localStorage: ${binarray(data)}`)
