@@ -16,10 +16,32 @@
 
 // This algorithm is considered "brute force". It will be slow, just like in the binary contig array. The number of operations will be related to the square of he number of elements, which isn't very good. But the max size we are looking at is just 825 elements.
 
-let array = [-2,3,5,4,7,-4,5,5,7,5,9,-7,-1,-6   ];
+// let array = [7,9,6,10,5,11,10,12,13,4,2,5,1,6,4,8];
+let array = [ 1, 2, 3, 4, 5, 6 ];
+//[ 1, 2, 3, 4, 5, 6 ]
+//deriv 1,1,1,1,1
+// expect [1,2];
+// got [1]
+
+
+//[ -4, -3, -6, 11, 6 ]
+//       [-1,-9,11,13,-18, -4,-3,-6,11,6, 6,-15,-11,4,10,-10,-6 ];
+  //deriv  [-8,20,2,-31,14, 1,-3,17,-5,   0,-21,4,15,6,-20,4]
+//           -1,1,1,-1,1, 1,-1,1,-1,   0, -1,1,1,1,-1,1
+//now the problem is literally becoming binaryContigArray!
+
+//[ 7, 9, 6, 10, 5, 11, 10, 12, 13, 4, 2, 5, 1, 6, 4, 8 ]
+//    [1,-1,1,-1,1,-1,1,  1,-1,-1,1,-1,1,-1,1]
+//got [ 7, 9, 6, 10, 5, 11, 10, 12, 13, 4 ]
+// should get [ 7, 9, 6, 10, 5, 11, 10, 12 ]
+
+// lets take that a step further and make it -1 0 or +1
+
+console.log(`array: ${array}`);
+
 
 function longestBouncyList(arr){
-    console.log(`array: ${arr}`);
+    console.log(arr);
 
     //early return
     if (arr.length==1){
@@ -35,52 +57,36 @@ function longestBouncyList(arr){
     }
     console.log(`derivative magnitude: ${deriv}`);
 
-    let savej=0;
-    let savei=0;
-    let subarr = [];
+    let savej = 0;
+    let savei = 0;
     let span = 0;
     let spanP = 0;
-    for (let i=0;i<deriv.length;i++){//Choose beginning point
-        console.log(`i: ${i}`)
-        for (let j=i;j<deriv.length;j++){//Choose point to analyze
-            if (deriv[j]==0){
-                //"or the special case of length 2 arrays, we will consider them strict bouncy if the two elements are different."
-                //So that means when there are two identical elements that terminates bouncy.
-
-                //But we do still have to keep searching after this point to see if there is a longer array.
-                savej = j;
-                savei = i;
-                i=j;//to continue searching after this point
-                break;
-            } else if (deriv[j]==deriv[j+1]){//Matching slope magnitude so terminate bouncy sequence
-                //handle the special case where the array is only 2 long
-                savej = j+1;
-                savei = i;
-                console.log(`found a spot where the slope is the same twice in a row i: ${i} j: ${j}`)
-                i=j;//to continue searching after this point
-                break;
-            } else if (j == (deriv.length-1) && deriv[j]!=deriv[j+1]){//bouncy until the end.
-                console.log(`The end of the array is bouncy. j is ${j} i is ${i} length is ${deriv.length}`)
-                savej = j;
-                savei = i;
-                span = savej+2-savei;
-                console.log(`span: ${span} spanP: ${spanP}`)
+    for (let i=0;i<arr.length;i++){
+        for (let j=i;j<arr.length-i;j++){
+            //off by 1 from derivative calc
+            if (deriv[j]==deriv[j+1] || deriv[j+1]==0) {
+                span = j-i;
                 if (span>spanP){
+                    savej = j+1;
+                    savei = i;
                     spanP = span;
-                    subarr = arr.slice(savei, savej+2);
-                    return subarr;
+                    i =j+1// There's no point in just searching from i+1 again, you know bounciness will terminate with a shorter sequence so lets just start working after j
                 }
-            }
-        } 
-        span = savej+1-savei;
-        if (span>spanP){
-            spanP = span;
-            subarr = arr.slice(savei, savej+1);
+                console.log(`end bouncy at ${savej}`)
+                break;
+            };
         }
     }
-    return subarr;
-}
     
+  //special case when there is no change in magnitude of slope, we can't report a single value as the bouncy array. It's just an arbitrary definition of "bouncy" so lets handle that
+  //unless slope was just always zero then it's ok.  
+  if ((savej-savei)==0 && deriv[savej] != 0){
+    savej++;
+  }
+
+    //off by one because slice is not inclusive.
+    return arr.slice(savei, savej+1);
+}
 
 console.log(longestBouncyList(array));
 
