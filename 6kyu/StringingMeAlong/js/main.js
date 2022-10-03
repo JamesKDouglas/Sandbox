@@ -10,11 +10,23 @@
 // https://javascript.plainenglish.io/infinite-currying-in-javascript-f17ec1619568
 
 function createMessage(a) {
+    if (!a){
+        return "";
+    }
   return function(b){
     if(!b){
         return (a);
     }
-    return createMessage(a.concat(" "+ b));
+    return createMessage(a + " " + b);
   }
 }
-console.log(createMessage("1")("2")("3")("4")("5")("6")());
+console.log(createMessage("hello")("all the")("world")());
+
+//sxcw uses, 
+// function createMessage(str) {
+//     return function(next){
+//       if (next === undefined) {return str;}
+//       return createMessage(str + " "+ next);
+//     }
+// }
+//Which is really the same. 
