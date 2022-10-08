@@ -24,3 +24,11 @@ function uncensor(infected, discovered) {
     return resString;
 }
 console.log(uncensor(str, dis));
+
+
+//an example with map from andoray
+// function uncensor(infected, discovered) {
+//     const arr = [...discovered]
+//     return [...infected].map(el=> el === '*' ? arr.shift() : el).join('')
+//   }
+//However, this does not use string methods as much as it could, so it doesn't reach my goal.
