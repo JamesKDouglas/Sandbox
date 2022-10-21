@@ -17,8 +17,11 @@ function sortDict(dict) {
     let keys = Object.keys(dict);
     // console.log(keys);
     for (k of keys){//could use spread operator
-        // console.log(k);
-        arr.push([+k, dict[k]]);
+       if (Number.isNaN(+k)){
+          arr.push([k, dict[k]]);
+        } else {
+          arr.push([+k, dict[k]]);
+        }
     }
 
     arr.sort((a,b) => b[1]-a[1]);
