@@ -1,5 +1,0 @@
-// parameters:
-// return:
-// example:
-// pseudocode:
-
