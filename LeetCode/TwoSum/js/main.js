@@ -23,19 +23,17 @@ var twoSum = function(nums, target) {
     let num1 = 0;
     let num2 = 0;
 
-    let smallArr = nums.filter(el => el<=target);
-
-    if (smallArr.filter(el => el===target/2).length ===2){
+    if (nums.filter(el => el===target/2).length ===2){
       //This is a special solution which we handle as an early return. It means there are two of the same number, which add up to the target. This does disturb the set algorithm, even though that algorithm is nice in other ways.  
       return [nums.indexOf(target/2), nums.lastIndexOf(target/2)];
     }
   
-    let aSet = new Set(smallArr);
+    let aSet = new Set(nums);
     
     
     
-    for(let i=0;i<smallArr.length;i++){
-        num1 = smallArr[i];
+    for(let i=0;i<nums.length;i++){
+        num1 = nums[i];
         if (num1 === target/2){
           continue;
         }
