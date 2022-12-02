@@ -19,27 +19,30 @@
 // findNb(91716553919377) --> -1
 
 
+//What I would ask an interviewer here is to clarify for the case of m=1
+//for m=1, we could have a 'pile of cubes' with just 1 cube of side dimension 1.
+//So in the problem description they show a summation 
+// n^3 + 1^3. What do they mean by that final term? It just doesn't make sense in the base case of 1. 
+//well in the case of m=1, the solution is n=0.
+
+
 function findNb(m) {
     //Brute force: try all n's. 
-    let tryn = 1;
-    let v = 0;
-  
-    //Try each value of n, make the summation and see if it equals the target volume.
-    for (let j=0;j<50;j++){
-      v=0;
-      for (let i=0;i<tryn+1;i++){
-        v += (tryn-i)**3;
-        console.log("tryn", tryn);
-        console.log("v", v);
+    for(let n=0;n<10000;n++){
+      let sum = 0;
+      for (let i=0;i<=n;i++){
+        sum += i**3;
       }
-      tryn++;
+      if (sum === m){
+        return n;
+      }
+      if (sum>m){
+        return -1;
+      }
+      // console.log(sum);
     }
-    return tryn;
-    
-    //  return (-1);
   }
   
-  
-//   console.log(findNb(1071225), 45);
-  //console.log(findNb(91716553919377),-1);
+  console.log(findNb(1071225), 45);
+  console.log(findNb(91716553919377),-1);
   
