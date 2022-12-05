@@ -60,11 +60,7 @@
 //there's no penalty to sprinting in the last unit so there will always be at least 1 sprint
 //sprinting at the end does minimize the cost from rule 4.
 function solution(s, t) { 
-  
     //generate a sequence, rrrs, rsrs etc.
-    
-    // to expand: rrrrrs, rrrsrs, rsrsrs. So half the number of sequences as there are t's. 
-    //then go through them and look for d falling. If it falls we're done - exit and return.
     let seqs = [];
     let sprint = "sr";
     let reg = "r";
@@ -75,10 +71,36 @@ function solution(s, t) {
       seqs[i] = seqs[i] + "s"; //there is always a terminal sprint.
     }
     
+    console.log(seqs);
+    
+    //then go through them and look for d falling. If it falls we're done - exit and return.
     //use the sequences in a for loop, just checking them one at a time, integrating for d.
-    //if d starts to go down that means there has been too much sprinting. When we detec we know that the prior sequence was the best solution.
+    //So, here I just check all the sr sequences. We could set flags so when it starts to decrease we terminate, because it's true that at some point there are too many sprints and there is no point in adding more.
+    let S = s; //store speed
+    let d=0;
+    let dMax=0;
 
+    for (let i=0;i<seqs.length;i++){//choose sequence;
+      d=0;//reset d
+      S=s;//reset s
+      for (let j=0;j<seqs[i].length;j++){
+        if (seqs[i][j]==="r"){
+          d += S;
+        } else if (seqs[i][j] === "s"){
+          d += 2*S;
+          S -= 1;
+        }
+        console.log("d so far:", d);
+      }
+      console.log(d);
+
+      if (d>dMax){
+        dMax = d;
+      }
+    }
+    return dMax;
 }
   
-  console.log(solutions(2,4), 10);
+  console.log(solution(2,4), 10);
   
+  //This passes the codewars but I do need to turn off the console logs otherwise it exceeds the buffer.
