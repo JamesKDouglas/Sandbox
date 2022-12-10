@@ -33,35 +33,31 @@ function hasSurvived(attackers, defenders){
     let shortest = Math.min(attackers.length, defenders.length);
   //   console.log("shortest:",shortest);
     
-    //find the total sums before we mutate.
+    //find the total sums
     let attackersIAP = attackers.reduce((a,c)=>a+c,0);
     let defendersIAP = defenders.reduce((a,c)=>a+c,0);
     
     let attackerBuf = 0;
+
     //set up a for loop. Go through the indexes of the shortest array.
     for (let i=0;i<shortest;i++){
       attackerBuf = attackers[i];
       
-    //Subtract values. Write it out rather than using destructured notation.
-    //mutate the arrays to remove values and change values.
+    //Subtract values. 
+    //Don't mutate, just make new arrays with filter afterwards.
       attackers[i] = attackers[i]-defenders[i];
       defenders[i] = defenders[i]-attackerBuf;
-      if (attackers[i]<=0) {
-        console.log("one attacker down!");
-        attackers.splice(i,1);
-      };
-      if (defenders[i]<=0) {
-        console.log("one defender down!");
-        defenders.splice(i,1);
-      }
     }
+    let newAttackers = attackers.filter(el => el>0);
+    let newDefenders = defenders.filter(el => el>0);
     
     //at the end, see how many elements remain.
-    console.log("attackers:", attackers);
-    console.log("defenders:", defenders);
-    if (attackers.length>defenders.length) return false;
-    if (attackers.length<defenders.length) return true;
-    if (attackers.length === defenders.length) {
+    // console.log("newAttackers:", newAttackers);
+    // console.log("newDefenders:", newDefenders);
+
+    if (newAttackers.length>newDefenders.length) return false;
+    if (newAttackers.length<newDefenders.length) return true;
+    if (newAttackers.length === newDefenders.length) {
     //if the # elements is the same then check the sums.
     //declare a winner if you can.
       if (attackersIAP>defendersIAP) {
