@@ -27,22 +27,22 @@
 
 
 function findNb(m) {
-    //Brute force: try all n's. 
-    for(let n=0;n<10000;n++){
-      let sum = 0;
-      for (let i=0;i<=n;i++){
-        sum += i**3;
-      }
-      if (sum === m){
-        return n;
-      }
-      if (sum>m){
-        return -1;
-      }
-      // console.log(sum);
+  //Brute force: try all n's. 
+  for(let n=0;n<10000;n++){
+    let sum = 0;
+    for (let i=0;i<=n;i++){
+      sum += i**3;
     }
+    if (sum === m){
+      return n;
+    }
+    if (sum>m){
+      return -1;
+    }
+    // console.log(sum);
   }
+}
   
-  console.log(findNb(1071225), 45);
-  console.log(findNb(91716553919377),-1);
+console.log(findNb(1071225), 45);
+console.log(findNb(91716553919377),-1);
   

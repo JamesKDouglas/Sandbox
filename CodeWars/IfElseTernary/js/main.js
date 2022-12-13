@@ -12,3 +12,7 @@ function saleHotdogs(n){
     return price*n;
       
   }
+  //A more condensed version from unnamed etc:
+//   function saleHotdogs(n){
+//     return n*(n<5?100:n<10?95:90);
+//   }

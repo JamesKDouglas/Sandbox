@@ -28,7 +28,10 @@ function digitalRoot(n) {
   console.log(digitalRoot(132189),6);
   console.log(digitalRoot(493193),2);
   
-  
-  
+//cleverer solution:
+//   function digital_root(n) {
+//     return (n - 1) % 9 + 1;
+//   }
+//can it be proven though?
   
   

@@ -22,13 +22,11 @@ function count(string) {
     //bracket notation.
     //initialize object.
     let countLetters = {};
-    //use a for loop to go through each character in the string.
-    for (let i=0;i<string.length;i++){
-        //If the key exists for that character, increment it. If not, create the key then initialize it at 1;
-        if (!countLetters[string[i]]){
-        countLetters[string[i]] = 1;
+    for (c in string){
+        if (!countLetters[string[c]]){
+        countLetters[string[c]] = 1;
         } else {
-            countLetters[string[i]]++;
+            countLetters[string[c]]++;
         }
     }
      return countLetters;

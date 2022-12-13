@@ -45,4 +45,8 @@ function dup(s) {
   console.log(dup(["","aa","bab"]),'["","a","bab"]');
   console.log(dup(["gone","going","missing"]),'["gone","going","mising"]');
   console.log(dup(["kelless","keenness"]),'["keles","kenes"]');
-  
+
+  //regex solution by tadasK:
+  // function dup(s) {
+  //   return s.map(x => x.replace(/(.)\1+/g,'$1'))
+  // };

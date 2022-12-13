@@ -14,7 +14,6 @@
 //[2,2,1,2,1] => [2,2,2,1]
 //[] => []
 
-
 function removeSmallest(numbers) {
   
     //early return if numbers is empty.
@@ -23,9 +22,8 @@ function removeSmallest(numbers) {
     //Identify the magnitude of the smallest element. Math.min for that.
     let minVal = Math.min(...numbers);
   
-    //hunt from the left to find the index. findIndexOf does that.
+    //hunt from the left to find the index. indexOf does that.
     let leftIndex = numbers.indexOf(minVal);
-    console.log(leftIndex);
 
     //Make a copy, then mutate it.
     let nums = numbers.slice();
