@@ -1,10 +1,10 @@
-// parameters: A positive integer is provided. Up to 3000?
+//The input will be an integer up to 3999.
 
-// return: The integer represented by the ruman numeral system.
-// example:
-// https://en.wikipedia.org/wiki/Roman_numerals
+//Your job is to return a string that represents the number as a roman numeral.
 
-//Character map:
+//Roman numerals work like this:
+//Each character from the left represents an integer that is added according to the mao:
+
 // I          1
 // V          5
 // X          10
@@ -13,76 +13,105 @@
 // D          500
 // M          1,000
 
-//1 to 12:
-// I, II, III, IV, V, VI, VII, VIII, IX, X, XI, XII
+//so III is 3, CCC is 300 etc.
 
-// pseudocode:
-// Put the argument into num.
-// Check the magnitude of num, matching it to the character map descending in value.
-// When the correct magnitude is found, aka the number is larger than the value.
-//      Then see how many times larger num is than the value. 
-//      If it's over 3x larger we need to use the next symbol and place a subtractive symbol in front
-        //    So go into an if statement block and do that. go into a loop with the parameter of the character and the number.
-//      Otherwise just subtract that amount, add to the string and loop again.
+//As a first priority the number is represented by a symbol or repeating symbols. The highest is used as a priority. For example 10 is not VV, it is X.
 
-// ex for 5:
-// num is 5
-// 5 is equal to the value V.
-// Therefore subtract 5 from num and concat v onto the string.
-// num is now 0
-// So end the loop and return the string.
+//So often can identify the magnitude, match the next largest character, build that to a string and subtract the value. Then repeat for the smaller value.
 
-// ex for 1890:
+//However:
+// You can't have more than 3 symbols. This applies when a number is between the character handling a number starting with a 1 and a 5. So 400 can't be CCCC.
+//Instead, you must use a subtractive method for that integer add.
+// for example 400 would be CD. 405 would be CDV.
 
-// num is 1890. This is larger than M. M is the largest thing.
-// It is larger by a factor of 1.89. That's less than 3. It has a floor of 1
-// Therefore append 1 M and extract 1000.
-// num is now 890. Loop again.
-// 890 is larger than D but smaller than M. It is larger than D by 1.5 or so. 
-// Subtract 500 and concat D.
-// num is 390
-// that's larger than C and smaller than D. It is larger than C by 3.9. (we will use CCC)
-// floor of 3.9 is less than 4 or over. Only do a prefix routine if it's over four. There is only ever a single prefix used. 
-// subtract the value times floor, and concat that many 
-///etc.
+//I've been trying to be clever to implement logic that can do this. But instead, lets try a 'brute force' case/switch program.
 
-//Below I use a strictly mathematical model. Perhaps I should, instead, sort by digits first and consider the magnitude of the digits. How do you write a proper prefix function that works for both the 500 and 1000?
-
-//1990 should be MCMXC
-let num = 1990;
 function solution(number){
-    let rom = [['I',1],['V',5],['X',10],['L',50],['C',100],['D',500],['M',1000]];
-
+    //us a while loop to decrease the number.
+    let rom = [['I',1],['V',5],['X',10],['L',50],['C',100],['D',500],['M',1000],['K',4000]];
+    let char = [];
     let str = "";
 
-    let num = number; //just make a copy. It's a primitive so no reference issues.;
-
-    //anti crash counter ;P;
-    let j = 0;
-    while (num>0 && j< 10){
-        console.log(`begin loop. num is ${num}`);
+    let j=0;
+    while (number>0 && j<10){
         j++;
-        for (let i=rom.length-1;i>=0;i--){//count down through the characters by value
-            console.log(`checking ${num} against ${rom[i][0]} aka ${rom[i][1]}`);
-            if (num>=rom[i][1]){
-                console.log(`found me a match`);
-                let floor = Math.floor(num/rom[i-1][1]);
-                console.log(`floor is ${floor}`);
-                if (floor>=4){
-                    //prefix subroutine.
-                    console.log(`begin prefix routine`);
-                    str = str.concat(rom[i][0]);
-                    str = str.concat(rom[i+1][0]);
-                    num -= (rom[i+1][1] - rom[i][1]); //parenthesis may not be necessary.
-                    break;
-                }
-                str = str.concat(rom[i][0]);
-                num -=rom[i][1];//we could detect that we need multiple ones but I'd rather just let the loop run again, given the job size (very small).
-                console.log(`str: ${str}`);
+        //identify the range we're working with.
+        for (let i=rom.length-1;i>=0;i--){
+            if (rom[i][1]<=number){
+                char = rom[i][0];
+                break;
             }
         }
+
+        //Now that we identified the roman numeral range were working in, go into the switch statement
+        switch (char[0]){
+            case 'I': 
+                console.log(`case I`);
+                if (number===4){
+                    number -= 4;
+                    str.concat("IV");
+                    break;
+                } else {
+                    number -= 1;
+                    str.concat("I");
+                    break;
+                }
+            case 'V':
+                console.log(`case V`);
+                if (number === 9){
+                    number -= 9;
+                    str.concat("IX");
+                    break;
+                } else {
+                    number -= 5;
+                    str.concat("V");
+                    break;
+                }
+            case 'X':
+                console.log(`case X`);
+                if (number>=40 && number<30){
+                    number -= 40;
+                    str.concat("DL");
+                    break;
+                }
+                else if (number >= 30 && number < 40){
+                    number -= 30;
+                    str.concat("XXX");
+                    break;
+                } else if (number>=20 && number<30) {
+                    number -= 20;
+                    str.concat("XX");
+                    break;
+                } else if (number<20){
+                    number -= 10;
+                    str.concat('X');
+                    break;
+                }
+            case 'C':
+                console.log(`case C`);
+                break;
+            case 'D':
+                console.log(`case D`);
+                break;
+            case 'M':
+                console.log(`case M`);
+                break;
+            case 'K':
+                console.log(`case K`);
+                return "Number too large! Must be below 4000."
+                break;
+                
+        }
+        return str;
     }
-    return str;
+
+    //Inside the while loop we'll use a switch to look at the magnitude.
+    //Compare it to a character map, which can just be an array.
+
+    //Build the string by choosing the case, identifying the correct character string, and then concatenating it.
+
+    //return the string!
+
 }
 
-console.log(solution(num));
+console.log(solution(5), 'V');
