@@ -51,5 +51,7 @@ function solve(s){
   console.log(solve("((("),-1); 
   
   //optimization: "balanced parentheses" means not just a single set but multiple
-  //sets are allowed.
+  //sets are allowed. This wasn't described in the original question, and the test cases
+  //were not written for it. So I consider this solution complete. 
+  //But this is a separate and valid problem.
   
