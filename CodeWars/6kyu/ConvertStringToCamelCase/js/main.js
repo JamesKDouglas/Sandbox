@@ -41,21 +41,28 @@ function toCamelCase(str){
   //   }
     
     //to handle the combo lets split both then flatten.
-
-    words = str.split("-")
+    if (str.indexOf("-")!==-1){
+      words = str.split("-");
+    } else {
+      console.log("underscore only")
+      words = str.split("_");
+      console.log(words);
+    }
 
     for (let i=0;i<words.length;i++){
       words[i]=words[i].split("_");
     }
+
     console.log(words);
     words.flat(2);
-    words = words[0].toString().split(",");
-    
+    // words = words[0].toString().split(",");
+    console.log(words);
     // console.log(words);
 
     //now capitalize all the words except the first
     let word = "";
     let newWords = [words[0]];
+    // console.log(words.length);
     for (let i=1;i<words.length;i++){
     //   console.log("run loop");
       word = words[i].toString();
@@ -66,11 +73,12 @@ function toCamelCase(str){
     }
     
     //return the camelcase!
-    // console.log(newWords);
-    return newWords.join("");
+    console.log(newWords.flat(2));
+    return newWords.join("").replaceAll(",","");
   
   }
   
   console.log(toCamelCase("the-stealth-warrior"), "theStealthWarrior");
-//   console.log(toCamelCase("The_Stealth_Warrior"), "TheStealthWarrior");
-//   console.log(toCamelCase("Go_Senators"), "GoSenators");
+  console.log(toCamelCase("The_Stealth_Warrior"), "TheStealthWarrior");
+  console.log(toCamelCase("Go_Senators"), "GoSenators");
+  console.log(toCamelCase("the_stealth_warrior", "theStealthWarrior"))
