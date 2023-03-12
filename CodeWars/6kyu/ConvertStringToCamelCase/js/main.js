@@ -30,50 +30,25 @@ function toCamelCase(str){
     
     //parse
     let words = [];
-    
-    //ok it turns out they want us to be able to handle a -mixture- of -, _
-    //we could use split with just a regex.
-    
-    //   if (str.includes("-")){
-  //     words = str.split("-");
-  //   } else if (str.includes("_")){
-  //     words = str.split("_");
-  //   }
-    
-    //to handle the combo lets split both then flatten.
-    if (str.indexOf("-")!==-1){
-      words = str.split("-");
-    } else {
-      console.log("underscore only")
-      words = str.split("_");
-      console.log(words);
-    }
 
-    for (let i=0;i<words.length;i++){
-      words[i]=words[i].split("_");
-    }
+    //replace hyphens with underscores in case there is both.
+    str = str.replaceAll("-", "_");
 
-    console.log(words);
-    words.flat(2);
-    // words = words[0].toString().split(",");
-    console.log(words);
-    // console.log(words);
+    //then split
+    words = str.split("_");
 
     //now capitalize all the words except the first
     let word = "";
     let newWords = [words[0]];
     // console.log(words.length);
     for (let i=1;i<words.length;i++){
-    //   console.log("run loop");
       word = words[i].toString();
-      word = word.toLowerCase();//to correct for unexpected upper case letters
+      word = word.toLowerCase();//to correct for unexpected uppercase letters
       word = word[0].toUpperCase() + word.slice(1);
-    //   console.log(word);
       newWords.push(word);
     }
     
     //return the camelcase!
-    console.log(newWords.flat(2));
     return newWords.join("").replaceAll(",","");
   
   }
@@ -81,4 +56,4 @@ function toCamelCase(str){
   console.log(toCamelCase("the-stealth-warrior"), "theStealthWarrior");
   console.log(toCamelCase("The_Stealth_Warrior"), "TheStealthWarrior");
   console.log(toCamelCase("Go_Senators"), "GoSenators");
-  console.log(toCamelCase("the_stealth_warrior", "theStealthWarrior"))
+  console.log(toCamelCase("the_stealth_warrior"), "theStealthWarrior")
