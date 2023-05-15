@@ -17,23 +17,28 @@ var numberFormat = function (number) {
     //but we just have to watch out for that negative sign.
     let j=1;
     let numArr = number.toString().split("");
-    console.log("start with numArr", numArr);
+    // console.log("start with numArr", numArr);
+    let k=0;
     do{
       if (numArr[numArr.length-j]!==","){
-        j++;
-        if (j%3===0 && numArr[numArr.length-j-1]!=="-"){
+        // console.log("J:",j, numArr)
+        if ((j-k)%3===0 && numArr[numArr.length-j-1]!=="-"){
             numArr.splice(numArr.length-j,0,",");
-            console.log(numArr, j);
+            // console.log("after splicing:",numArr, j);
+            k++;
         }       
+        j++;
+      } else {
+        j =j+2;
       }
-      j++;
+      
     } while (j<numArr.length)
     return numArr.join("");
   };
   
   console.log(numberFormat(100000), "100,000");
-//   console.log(numberFormat(5678545), "5,678,545");
-//   console.log(numberFormat(-420902), "-420,902");
+  console.log(numberFormat(5678545), "5,678,545");
+  console.log(numberFormat(-420902), "-420,902");
   
   
   
