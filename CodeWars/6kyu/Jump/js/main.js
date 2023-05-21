@@ -29,6 +29,7 @@
 //Size? Nothing huge. Timeouts? Unexpected.
 
 function canJump(array){
+    console.log(array);
     //early returns - length 1, only zeros.
     if (array.length === 1) return false;
     if (array.reduce((a,b) => {return a+b;},0) === 0) return false;
@@ -58,10 +59,7 @@ function canJump(array){
         //Can I exceed this with any previous values?
         for (let j=array.length-1;j>0;j--){
           console.log("j is ", j)
-          if (j===1){
-            console.log("no, we checked all the values and cannot ever jump past the end");
-            return false;
-          }
+
           console.log("look at the value ", array.length-j, " from the end");
           console.log("which is", array[j-1])
           if (array[j-1]>(array.length-j)){
@@ -73,6 +71,10 @@ function canJump(array){
             break;
           } else {
             //if not, keep searching
+            if (j===1){
+                console.log("no, we checked all the values and cannot ever jump past the end");
+                return false;
+            }
             continue;
           }
           //we got to the beginning and no possible jump past the end was found
@@ -109,10 +111,13 @@ function canJump(array){
     }
   }
   
-  console.log(canJump([2, 0, 3, 5, 0, 0, 3, 0, 0, 3, 1, 0]), true);
-  console.log(canJump([6]), false);
-  console.log(canJump([1,1,3]), false);
-  console.log(canJump([0, 0]), false);
+  //These cases come out fine. So the problem has been solved.
+  //However, apparently there are other test cases that don't
+//   console.log(canJump([2, 0, 3, 5, 0, 0, 3, 0, 0, 3, 1, 0]), true);
+//   console.log(canJump([6]), false);
+//   console.log(canJump([1,1,3]), false);
+//   console.log(canJump([0, 0]), false);
   
+  console.log(canJump([2, 5]), true);
   
   
