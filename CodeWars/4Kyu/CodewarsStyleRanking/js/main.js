@@ -56,5 +56,5 @@ class User {
   console.log(user.progress, 10);
   user.incProgress(-5) // will add 90 progress
   console.log(user.progress, 0); // progress is now zero
-  console.log(user.rankLevel, 1);//Rank was increased.
+//   console.log(user.rankLevel, 1);//Rank was increased.
   console.log(user.rank, -7); // rank was upgraded to -7

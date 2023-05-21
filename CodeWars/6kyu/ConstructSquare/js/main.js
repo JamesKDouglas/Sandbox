@@ -40,9 +40,10 @@
 //edge cases? invalid inputs? Not expected.
 //timeouts? Don't worry about it.
 
+
 function constructSquare(s) {
-    //Figure out number of digits.
-    //and the unique/identical 'signature'
+    //Figure out number of digits for the input.
+    //That is, the unique/identical 'signature' which it describes
     
     //make a array of all the squares with that length of
     //digits
@@ -58,29 +59,42 @@ function constructSquare(s) {
     //Then separate the string into groups and count
     //ex aba => baa => b aa
     
-    let sorted = s.split("").sort();
-    console.log(sorted);
     
+    
+    function makeSig(a){
+        a = a.split("").sort();
+        // console.log(a);
+        let signature = {}; //ex aba => b aa => {b:1, a:2}
+    
+        for (let i=0;i<a.length;i++){
+            // console.log("try to build object to count repeats")
+            if (signature[a[i]]){
+                signature[a[i]]++;
+            } else {
+                signature[a[i]] = 1;
+            }
+            // console.log(signature);
+        }
+        // console.log(signature);
+    
+        //Then I want to just flatten it to an array
+        let signatureFlat = [];
+        // console.log("begin flatten")
+        // console.log(signature)
+        for (b in signature){
+            // console.log("in for loop")
+            // console.log("signatureb:", signature[b]);
+            signatureFlat.push(signature[b]);
+        }
+        // console.log(signatureFlat);
+        //signatureFlat is in descending order
+        // console.log(signatureFlat)
+        return signatureFlat;
+    }
 
-    let signature = {}; //ex aba => b aa => {b:1, a:2}
-    
-    for (let i=0;i<length;i++){
-      if (signature[sorted[i]]){
-        signature[sorted[i]]++;
-      } else {
-        signature[sorted[i]] = 1;
-      }
-    }
+    let signature = makeSig(s);
+
     console.log(signature);
-    
-    //Then I want to just flatten it to an array
-    let signatureFlat = [];
-    for (a in signature){
-        // console.log(signature[a]);
-        signatureFlat.push(signature[a]);
-    }
-    console.log(signatureFlat);
-    //signatureFlat is in descending order
 
     //starting point for generating square
     //ex aba => 100 three digits
@@ -104,28 +118,16 @@ function constructSquare(s) {
 
     //for each number in the squares array, filter for 
     //meeting the digit signature
-    let passedNums = [];
-    let testSignature = {};
-    let testSignatureFlat = [];
-    let numSorted = [];
+    let maxNum = 0;
     for (let i=0;i<nums.length;i++){
-        numSorted = nums[i].toString().split("").sort((a,b)=>+a-+b);
-        console.log(numSorted);
-        for (let j=0;j<numSorted.length;j++){
-            if (testSignature[numSorted[i]]){
-                testSignature[numSorted[i]]++;
-            } else {
-                testSignature[numSorted[i]] = 1;
-            }
-        }
-        for (a in testSignature){
-            // console.log(signature[a]);
-            testSignatureFlat.push(testSignature[a]);
-        }
-        console.log("testSignatureflat",testSignatureFlat);
-        testSignatureFlat = [];
+       if (makeSig(nums[i].toString()) === signature && nums[i]>maxNum){
+            maxNum = nums[i];
+            console.log(maxNum);    
+       } else {
+            console.log("not the num")
+       }
     }
-    
+    console.log(maxNum);
     // for (let i=0;i<length;i++){
     //   if (signature[sorted[i]]){
     //     signature[sorted[i]]++;

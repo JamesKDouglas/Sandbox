@@ -20,7 +20,7 @@
 // //Note that this needs to run in a Node environment. 
 
 
-//The console log is quite mangled, but this also works:
+//The console log is quite mangled, but this works in a browser:
 
 function sha256(string) {
     const utf8 = new TextEncoder().encode(string);

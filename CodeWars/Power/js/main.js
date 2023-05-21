@@ -5,4 +5,4 @@ function numberToPower(number, power){
       output = output*number;
     }
     return output;
-  }
+  }``

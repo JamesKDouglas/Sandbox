@@ -17,6 +17,7 @@
 //sequence should be returned. 
 
 function* paperFold() {
+    console.log("begin paperfold");
     let seq = [1];
     let dig = 1;
     while(true){
@@ -27,14 +28,25 @@ function* paperFold() {
                 dig = 0;
             }
             seq.splice(i,0,dig);
+            console.log(seq);
         }
         yield seq;
     }
 }
 
-const take = n => function*(gen) { while ( n-- >0 ) yield gen.next().value; } ;
+const take = n => function*(gen) { 
+    while ( n-- >0 ) { 
+        console.log("begin take"); 
+        // console.log(gen.next().value);
+        yield gen.next().value; 
+    }
+} ;
 
-console.log(take(0)(paperFold()), [1]);
-console.log(take(2)(paperFold()), [1,1,0,1,1,0,0]);
-console.log(take(3)(paperFold()), [1,1,0,1,1,0,0,1,1,1,0,0,1,0,0]);
+//The double round brackets are because:
+//take(0) returns a function. Then the function is passed another function. 
+//This is currying
+let takeObj = take(2)(paperFold());
+console.log(takeObj, [1]);
+// console.log(take(2)(paperFold()), [1,1,0,1,1,0,0]);
+// console.log(take(3)(paperFold()), [1,1,0,1,1,0,0,1,1,1,0,0,1,0,0]);
   

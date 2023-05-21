@@ -5,7 +5,7 @@
 //ex 1 is jan so that is the 1st quarter. So is 2 (Feb)
 
 //edge cases or computation size?
-//"Jan"? not expected.
+//"Jan"? not expected.`
 //decimal?
 //Job size modest.
 

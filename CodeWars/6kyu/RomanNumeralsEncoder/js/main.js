@@ -26,6 +26,8 @@
 
 //I've been trying to be clever to implement logic that can do this. But instead, lets try a 'brute force' case/switch program.
 
+//Another way is to make an array of digits, then treat them by power. 
+
 function solution(number){
     //us a while loop to decrease the number.
     let rom = [['I',1],['V',5],['X',10],['L',50],['C',100],['D',500],['M',1000],['K',4000]];
@@ -69,7 +71,12 @@ function solution(number){
                 }
             case 'X':
                 console.log(`case X`);
-                if (number>=40 && number<30){
+                if (number<=49 && number>40){
+                    number -= 40;
+                    str.concat("DL");
+                    break;
+                }
+                else if (number>=40 && number<30){
                     number -= 40;
                     str.concat("DL");
                     break;

@@ -14,6 +14,7 @@ const getLeaderBoardHonor = async (url) => {
             const matches = page.match(regex)
             //\D is anything that is not a digit. So globally remove all things that are not digits.
             const array = matches.map(string => Number(string.replace(/\D/g, "")))
+            //This doesn't print anything. Why not? My goal is to actually do something with the data..
             console.log(array);
             try{
                 resolve(array)

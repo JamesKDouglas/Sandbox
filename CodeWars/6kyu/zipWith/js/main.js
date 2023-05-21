@@ -43,4 +43,8 @@ function zipWith(fn,a0,a1) {
   console.log(zipWith( Math.max, [1,4,7,1,4,7], [4,7,1,4,7,1] ), [4,7,7,4,7,7]);
   console.log(zipWith( function(a,b) { return a+b; }, [0,1,2,3], [0,1,2,3] ), [0,2,4,6]);
   console.log(zipWith( (a,b) => a+b,[0,1,2,3], [0,1,2,3] ),[0,2,4,6]);
-  
+
+//short version from pwynn  
+//   function zipWith(fn,a0,a1) {
+//     return Array.from({length: Math.min(a0.length, a1.length)}, (_, i) => fn(a0[i], a1[i]));
+//   }

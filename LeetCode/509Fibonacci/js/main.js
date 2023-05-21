@@ -15,7 +15,7 @@ function fib(n){
     let seq = [0,1];
 
     // //if n is less than 2 then this loop just won't run
-    for (let i=2;i<n;i++){
+    for (let i=2;i<=n;i++){
         seq[i] = (seq[i-1]+seq[i-2]);
     };
 

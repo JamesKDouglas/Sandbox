@@ -1,7 +1,7 @@
 
 //the input will be a positive integer, n between 10 and 100 000
 
-//note that fib(100 000)  is a bigInt so we will have to use BigInt.
+//note that fib(100 000) is a bigInt so we will have to use BigInt.
 
 //Determine the nth element of the sequence.
 
@@ -9,7 +9,7 @@
 
 //Return the count as a list of integer pairs. 
 //Sort the list by abundance for each digit before returning it.
-//If two digits have the same abundance, position the lower digit first in the array.
+//If two digits have the same abundance, position the lower digit second in the array.
 
 //ex:
 //f(10) = 55 => return [[2,5]];
