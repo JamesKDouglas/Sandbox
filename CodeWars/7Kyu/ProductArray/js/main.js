@@ -1,29 +1,19 @@
-// parameters: The input is an array of positive (?) integers over 2 elements long. Smaller than BigInt.
-// return: Return a processed version of the same length. The array as a single dimensional array.
-// The processing is as follows:
-// An array of products of all the elements is calculated. For each index in the returned array, the corresponding index of that factor is omitted from the calculated product.
-// example:
-// [1,5,2] is processed to be [10, 2, 5]. Note how the first element is a product of all the factors with the first omitted, the second omits the second factor, the third omits the third factor.
-// pseudocode:
-// We'll use a nested for loop.
-// The outter loop goes through the array the number of times that it is long. 
-// Each time the outter loop runs it adds just one number to the new array. It tracks the omitted factor.
-// The inner loop calculates the product. During calculation it skips the index marked by the outter loop.
+//The input is an array of positive integers. There are no repeats.
 
-let numbers = [1,5,2];
-function productArray(numbers){
-    let prod = [];
-    let prodTemp = 1;
-    for (let i=0;i<numbers.length;i++){
-        for (let j=0;j<numbers.length;j++){
-            if (j==i){
-                continue;
-            }
-            prodTemp *= numbers[j];
-        }
-        prod.push(prodTemp);
-        prodTemp=1;
-    }
-    return prod;
-}
-console.log(productArray(numbers));
+//The goal is to find the largerst two and return the product of them.
+
+//bigInts? Nope. 
+//Special cases? No expected invalid inputs.
+//job size, timeouts? Nothing special. 
+function maxProduct(a) {
+    //Sort the array
+    //Take the first two values, return the product.
+    
+    a = a.sort((a,b) => b-a);
+    return a[0]*a[1];
+    
+  }
+  
+  console.log(maxProduct([56, 335, 195, 443, 6, 494, 252]), 218842);
+  console.log(maxProduct([154, 428, 455, 346]), 194740);
+  console.log(maxProduct([39, 135, 47, 275, 37, 108, 265, 457, 2, 133, 316, 330, 153, 253, 321, 411]), 187827);
