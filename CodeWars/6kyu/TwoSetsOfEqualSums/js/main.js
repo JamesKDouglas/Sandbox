@@ -17,66 +17,51 @@
 //not expected.
 //edge cases? 0? 
 
+
+//For 7 I see that a combination of the contiguous and alternate algorithm could work.
+//I suppose this happens fairly often - split the sequence, run both algorithms then combine?
+//So this is n%4 = 3.
+
+//[1,2,3,4,5,6,7];
+//[7,4,2],[6,5,3,1]
+
+//[7,4,2,1][6,5,3]
+//or  [7,4,3][6,5,2,1] of course.
+//I suppose this suggests a recursive algorithm- split the array until it can be handled
+
+//so there are 4 cases, supposing the sum is even:
+//modulo 4 = 0.
+//modulo 4 = 1
+//modulo 4 = 2.  
+//modulo 4 = 3. We can take the first 3 values off, which balance, then balance the rest
+
+//even+odd = odd
+//even+even = even
+//odd+odd = even
+//The series has n elements and they go even odd even odd of course. 
+//So we can discount certain n values based on this.
+//if modulo 4 is 0 then that means the set is composed of odd + odd which collapses to 
+//even or even+even
+//if modulo 4 is 3 then we have even+odd+even+odd. So even again.
+// if modulo 4 is 2 then we have even + even + odd. That's going to be an odd sum. so not solvable.
+//if modulo 4 is 1 then we have even + odd which again is odd. 
+//So we don't need to deal with these 2 and 1 cases.
+
 function createTwoSetsOfEqualSum(n) {
   console.log(n);
-  //I could generate sets and check them. That's a brute force way.
-
-  //An easy early return would be to see if all the numbers summed result
-  //in an even number. Obviously to have two identical sums requires the
-  //total sum to be even.
   
-  //Early return - is the total sum even?
-  //We can use an algorithm to calculate the total sum. 
-  //s=((n/2)*(1+n))
-  //1,2,3,4 => 10. n=4. 2*5=10
-  
-  let sumTotal = (n/2)*(1+n);
-  if (sumTotal%2 !== 0){
-    return [];
+  if (n%4 === 2 ||n%4 === 1){
+    return [];//Not possible to balance. The 4 sections will balance but [2,1] will not neither will [1]. See informal proof of odd/even.
+    //the sum of all remainder 4 1 and 2 cases is always odd.
   }
-  
-  //if it is possible, and the sums have to be equal then I guess the
-  //sum must be half the sumTotal
-  let half = sumTotal/2;
-//   console.log("total sum: ", sumTotal);
-  
-  //Look for contiguous sets? Doesn't seem like a good strategy, given the examples
-  //But it would work for 3.
-  //So lets solve for n then,
-  //s=((n/2)*(1+n))
-  //s=n/2 + n^2/2
-  //hm ok so I can't isolate n
-  //I notice for 3 we use 2/3 of the front indexes. Given the geometry that makes sense.
 
-
-
-  //I do notice the solution for 8 is interspliced. That makes sense. It mostly
-  //keeps things balanced.
-  
-  //even/odd number of elements?
-  
-  //say for 8:
-//   [1,2,3,4,5,6,7,8]
-  //When we divide it into 2 sets
-  //take the highest, put it into set 1.
-  //Take the second highest, put it into set 2.
-  //Now set 2 is 1 less than set 1. 
-  //Compensate by putting the next value into set 2
-  //then the fourth value into set 1.
-  //After this we get parity. So if there is a number of elements modulo 4 
-  //then we can do this.
-  
-  //So we have [8,5] and [7,6]. Both sum to 13.
-  //carry on. 
-  //[8,5,4], [7,6,3] sums to 17, 16
-  //[8,5,4,1], [7,6,3,2] sums to 18, 18.
   let arr1 = [];
   let arr2 = [];
 
-  if (n%4 ===0){
+  function balanceFour(n, k){
     let toggle = true;
     //use the algorithm describe above
-    for (let i=n;i>=1;i-=2){
+    for (let i=n;i>k;i-=2){
       if (toggle){
         arr1.push(i);
         arr2.push(i-1);
@@ -90,40 +75,35 @@ function createTwoSetsOfEqualSum(n) {
 
     console.log(arr1.reduce((a,c)=>c+=a,0), arr2.reduce((a,c)=>c+=a,0))
     return [arr1, arr2];
-  } else if (n%3 === 0){
-//     console.log("use the continuous sequence algorithm");
-    let firstTwoThirds = 2*n/3;
-    // console.log(firstTwoThirds);
-    for (let i=n;i>=1;i--){
-      // console.log(n);
-      if (i>firstTwoThirds){
-        arr2.push(i);
-        // console.log(arr2);
-      } else {
-        arr1.push(i);
-      }
-    }
-//     console.log(arr1.reduce((a,c)=>c+=a,0), arr2.reduce((a,c)=>c+=a,0))
-//     console.log([arr1, arr2]);
-    return [arr1, arr2]; 
+  }
+
+  if (n%4 ===0){
+    return balanceFour(n, 1);
+  } else if (n%4 === 3){
+    console.log("mod4 is 3")
+    //hm, I want to do balancing as if it was mod4 0 but then stop at 3.
+    let newArrs = balanceFour(n, 3);
+    //then add [2,1] to one of them and [3] to the other
+
+    newArrs[0].push(1);
+    newArrs[0].push(2);
+    newArrs[1].push(3);
+    console.log(newArrs);
+    return newArrs;
+    
   }
 }
 
-//For 7 I see that a combination of the contiguous and alternate algorithm could work.
-//I suppose this happens fairly often - split the sequence, run both algorithms then combine?
-//So this is n%4 = 3.
 
-//[1,2,3,4,5,6,7];
-//[7,4,2],[6,5,3,1]
 
 console.log(createTwoSetsOfEqualSum(7), [[4,1],[3,2]]);
 //[1,2,3,4]
 //[4,1],[3,2]
 //You could say that we are adding values to the arrays from the right, then the left.
 
-// console.log(createTwoSetsOfEqualSum(4), [[4,1],[3,2]]);
+console.log(createTwoSetsOfEqualSum(4), [[4,1],[3,2]]);
 
-// console.log(createTwoSetsOfEqualSum(3), [[1,2],[3]]);
-// console.log(createTwoSetsOfEqualSum(2), []);
-// console.log(createTwoSetsOfEqualSum(9), []);
-// console.log(createTwoSetsOfEqualSum(8), [[1,3,6,8],[2,4,5,7]]);//other answers are also ok.
+console.log(createTwoSetsOfEqualSum(3), [[1,2],[3]]);
+console.log(createTwoSetsOfEqualSum(2), []);
+console.log(createTwoSetsOfEqualSum(9), []);
+console.log(createTwoSetsOfEqualSum(8), [[1,3,6,8],[2,4,5,7]]);//other answers are also ok.
