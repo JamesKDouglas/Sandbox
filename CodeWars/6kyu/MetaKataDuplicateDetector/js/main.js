@@ -55,13 +55,14 @@ function dupeDetect(arr){
 // [8, 16, 24, 0.004, 16, 16, 0]
 // [10, 25, 25, 0.005, 25, 25, 1]
 // [12, 36, 26, 0.006, 36, 36, 0]
+
 // [14, 49, 27, 0.007, 49, 49, 1]
 // [16, 64, 28, 0.008, 64, 64, 0]
 
 //Then the repeats array will be:
 // [0,1,3,4,5,6]
 // [1,4,5,6]
-// [1,4,5]
+// [0,1,4,5]
 // [1,4,5]
 // [1,4,5]
 // [1,2,4,5]
@@ -77,12 +78,8 @@ function dupeDetect(arr){
 
   let resultsArr = [[]];
   for (let i=0;i<=9;i++){//input
-    resultsArr.push([]);//create a blank element we can use;
-    for (let j=0;j<arr.length;j++){//function
-    //   console.log("j is: ", j);
-    //   console.log("function:", arr[j]);
-    //   console.log("push", arr[j](i));
-    //   console.log("resultsArr: ",resultsArr);
+    resultsArr.push([]);//create a blank element we can use
+    for (let j=0;j<arr.length;j++){//choose the function to generate outcome from
       resultsArr[i].push(arr[j](i));
     }
   }
@@ -90,10 +87,35 @@ function dupeDetect(arr){
 
   //generate repeats array
   //Really what that means is that if a number appears twice, the index gets added.
-  
+  //// [0, 0, 20, 0, 0, 0, 0] => [0,1,3,4,5,6]
+  // but also there are more complex cases, for example if we had
+  // [0, 0, 20, 20, 0, 0, 0] => [0,1,4,5,6],[2,3]
+  // In this case there are two sets of duplicates.
+  let duplicates = [[]];
+  for (let i=0;i<9;i++){
+  //I'm going to remove the examined element, then see if it is still in the array.
+  //If it is then it must be a duplicate.
+  duplicates.push([]);
+    for (let j=0;j<resultsArr[i].length;j++){
+      if (resultsArr[i].toSpliced(j,1).includes(resultsArr[i][j])){
+        duplicates[i].push(j)
+      }
+    }
+  }
+  console.log(duplicates);
 
   //find the set of numbers that appears in every single repeats array entry.
+  //This is just the shortest array in duplicates.
 
+  let shortestLength=9;
+  let shortestIndex=9;
+  for (i in duplicates){
+    if (duplicates[i].length<shortestLength){
+      shortestIndex = i;
+      shortestLength = duplicates[i].length;
+    }
+  }
+  return duplicates[shortestIndex];
 }
 
 const functionList = [
