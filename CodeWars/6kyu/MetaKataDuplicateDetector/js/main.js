@@ -36,6 +36,7 @@
 
 
 function dupeDetect(arr){
+  console.log(arr.toString());
   //We'll use nested for loops to generate the outcomes.
 
   //Then examine the outcomes for repeats.
@@ -96,8 +97,10 @@ function dupeDetect(arr){
   //I'm going to remove the examined element, then see if it is still in the array.
   //If it is then it must be a duplicate.
   duplicates.push([]);
+  let resultsArrCopy = [];
     for (let j=0;j<resultsArr[i].length;j++){
-      if (resultsArr[i].toSpliced(j,1).includes(resultsArr[i][j])){
+      resultsArrCopy = JSON.parse(JSON.stringify(resultsArr));
+      if (resultsArrCopy[i].splice(j,1).includes(resultsArr[i][j])){
         duplicates[i].push(j)
       }
     }
@@ -129,3 +132,41 @@ const functionList = [
 ];
 
 console.log(dupeDetect(functionList), [[1,4,5]]); // [[1, 4, 5]]
+
+//Well, I can detect if there is one common set now, but not multiple ones!
+
+// x => x * 2
+// x => x ** 2
+// x => x + 20
+// x => x / 1000
+// x => x * x
+// x => Math.pow(x,2)
+// x => x % 2
+// x => x * 2 ** 4
+// x => x << 4
+// Expected: [[1, 4, 5], [7, 8]], instead got: []
+
+// x => x * 2
+// x => x ** 2
+// x => x + 20
+// x => x / 1000
+// x => x * x
+// x => Math.pow(x,2)
+// x => x % 2
+// x => x * 2 ** 4
+// x => x << 4
+// [ [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ],
+//   [] ]
+// Expected: [[1, 4, 5], [7, 8]], instead got: []
+
+//I think what I should do here is make an object, give the 
+//property name the result value, then count duplicates that way.
+//At the end turn the object into an array to return.
