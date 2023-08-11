@@ -3,7 +3,7 @@
 //The goal is to find, out of all the number, the max and min difference pairs.
 //One number from each pair must be from each of the arrays.
 
-//return the integers as an array [highest, lowest]
+//return the integers as an array [highest difference, lowest difference]
 //ex:
 //ar1 = [3,10,5];
 //ar2 = [20,7,15,8];
@@ -19,42 +19,37 @@
 //So "min" is the smallest magnitude.
 
 function maxAndMin(arr1,arr2){
-  console.log("begin",arr1.sort((a,b)=>a-b), arr2.sort((a,b)=>a-b));
-  //random with large numbers is unlikely to have repeats in the same array.
-
+  // console.log("begin",arr1.sort((a,b)=>a-b), arr2.sort((a,b)=>a-b));
   
-  //sort them.
-  //for max, just take the min from one, compare to max of another
-  //or use Math.min, max.
-  //Try both combos
+  let finalArr = [0,0];
+//calculate the maximum difference by finding the min and max in both arrays
+//then obviously the max difference is the max number minus the min number.
+//There are two pairs to inspect: the highest from 1 and lowest from 2, 
+//then highest from 2 and lowest from 1.
   
   let max1 = Math.max(...arr1);
   let max2 = Math.max(...arr2);
   let min1 = Math.min(...arr1);
   let min2 = Math.min(...arr2);
   
-  let finalArr = [0,0];
-  
   let dif1 = max1-min2;
   let dif2 = max2-min1;
   
   finalArr[0] = Math.max(dif1,dif2);
-  console.log(finalArr);
+  // console.log(finalArr);
   
   //For the min, that's a bit more difficult.
-  //start in the middle and search outwards?
-  //Well, I could look for matching numbers as an early return.
-  //Suppose we use the sorted arrays and
-  
-  //1 do the ranges overlap? Because if not, then it's just max-min.
-  //If they do overlap, then we have to examin the actual elements.
-  //Sort. Look at the first one. Test. If it starts going up, stop and go the the next.
-  //has to be above zero.
-  // console.log("min2",min2)
-  // console.log("max2",max2)
-  // console.log("max1",max1)
-  // console.log("min1",min1)
 
+  //First of all, if there is no overap that's a special case that we can quickly find.
+  //In that case the minimum is just where one leaves off and the other begins.
+
+  //But lets try brute force with sorting to make things faster:
+  //Sort the arrays.
+  //Decide which array is shortest so we don't call on things that don't exist.
+  //Then just take the first element of the short array and subtract all the others, one at at time
+  //Remember the minimum
+
+  //check for overlap
   if (min2>max1 || min1>max2){
      console.log("no overlap");
   
@@ -62,48 +57,42 @@ function maxAndMin(arr1,arr2){
     return finalArr;
   } else {
     console.log("there is overlap. search for min");
+    //sort ascending order
     arr1 = arr1.sort((a,b)=>a-b);
     arr2 = arr2.sort((a,b)=>a-b);
-    let smallestDif = finalArr[0];
+    let smallestDif = finalArr[0];//larger than or equal to the max, of course.
+    
     let dif = 0;
     // //which array is shortest?
     let shortestLen = Math.min(arr1.length, arr2.length);
     let longestLen = Math.max(arr1.length, arr2.length);
-
-    let difArr = [];
+    //now for the big calculation;
+    let iOut = 0;
+    let jOut = 0;
     for (let i=0;i<shortestLen;i++){
-      difArr.push(arr1[i]-arr2[i]);
-    }
-    console.log("difArr", difArr);
-    for (let i=0;i<shortestLen;i++){
-      console.log("i", i)
       for (let j=0;j<longestLen;j++){
-        console.log("j",j);
-        if (arr1.length<arr2.length){
-          dif = arr1[i]-arr2[j];
-          console.log("dif", dif);
-        } else {
-          dif = arr2[i]-arr1[j];
-          console.log("dif", dif);
+        //if 1 is the shortest:
+        if (shortestLen === arr1.length){
+          if (Math.abs(arr1[i]-arr2[j])<smallestDif){
+            smallestDif = Math.abs(arr1[i]-arr2[j]);
+            iOut = i;
+            jOut = j;
+          }
+        } else {//If 2 is the shortest
+          if (Math.abs(arr2[i]-arr1[j])<smallestDif){
+            smallestDif = Math.abs(arr2[i]-arr1[j]);
+            iOut = i;
+            jOut = j;
+          }
         }
-        
-        if (dif === 0){
-          finalArr[1] = 0;
-          return finalArr;
-        } else if (dif<0){
-          console.log("negatives don't count as small differences");
-          // break;
-        } else if (dif<=smallestDif){
-          console.log("found a new smallest");
-          smallestDif = dif;
-        } else if (dif>smallestDif){
-          // console.log("next number")
-          // break;
-        }
-
+        //if 2 is the shortest:
       }
     }
-    finalArr[1] = Math.abs(smallestDif);
+    console.log("smallestDif", smallestDif);
+    console.log("jOut", jOut);
+    console.log("iOut", iOut);
+
+    finalArr[1] = smallestDif;
     return finalArr;
   }
   
@@ -113,12 +102,17 @@ function maxAndMin(arr1,arr2){
 // console.log("test2", maxAndMin([3],[20]), [17,17]);
 // console.log("test3", maxAndMin([3,10,5],[3,10,5]), [7,0]);
 
-let arr1 = [-86968,46083,-65703,-23077,11658,-97307,99011,77984,-56958,52059,-58841,45889,-28284,-84842,72261,83161,-20618,-82827,-28085,-2372,75259,18451,86487,-40160,2487,-96838,92417,83131,-90719,-30059,33553,2078,69922]
-let arr2 = [-85726,-50939,42931,-2049,-90130,33588,12977,-66966,65254,3488,75305,45743,26157,-10565,-44804,-80171,32302,59776,-51729,56515,-22869,-6990,45054,85648,78625,-53808,-99892,-54689,93347,-49170,-85151,95533,82867,-3772,68434,16257,63909,-85965,-10648,-46203] 
-console.log("test4", maxAndMin(arr1,arr2), [ 198903, 35 ]);
+// let arr1 = [-86968,46083,-65703,-23077,11658,-97307,99011,77984,-56958,52059,-58841,45889,-28284,-84842,72261,83161,-20618,-82827,-28085,-2372,75259,18451,86487,-40160,2487,-96838,92417,83131,-90719,-30059,33553,2078,69922]
+// let arr2 = [-85726,-50939,42931,-2049,-90130,33588,12977,-66966,65254,3488,75305,45743,26157,-10565,-44804,-80171,32302,59776,-51729,56515,-22869,-6990,45054,85648,78625,-53808,-99892,-54689,93347,-49170,-85151,95533,82867,-3772,68434,16257,63909,-85965,-10648,-46203] 
+// console.log("test4", maxAndMin(arr1,arr2), [ 198903, 35 ]);
 
 //[ 198903, 2585 ] to deeply equal [ 198903, 35 ]
 //Ok this is a problem comparing negative numbers. 
 
 //-84842 and -85151 should show a 309 value?. The difference between them is indeed 309.
 //Look at the smallest possible magnitude. c
+let arr1 = [-39957,38342,14764,79579,51352,2214,-23190,82202,-41875,-89379,80649,116,-65640,24622,-7304,36041,42265,89988,67465,2904,-94131,74867,93115,-37471,96179,67161,-76642,13208,72263,-45325,1473,91605,64818]
+let arr2 = [-87985,-15859,40661,-35082,-54932,31122,-6406,79699,29683,8897,-5718,95538,-68638,-98292,39546,-48839,-14078] 
+console.log("test4", maxAndMin(arr1,arr2), [ 194471, 120 ]);
+
+// expected [ 194471, 898 ] to deeply equal [ 194471, 120 ]
