@@ -47,29 +47,7 @@ function getScore(dice) {
   let sortedDice = dice.sort((a,b)=> a-b);
   
   console.log(sortedDice);  
-
-  //Use a function that looks for the hand:
-  //First look for the sequences.
-
-  //The recusive function for scoring looks like this:
-  //If the input is empty, return 0.
-  // Is the second the same as the first?
-    // If not, look for a straight. If it's a straight return the value. If not, subtract the number score for 1 or 5 and return shortened version.
-  // If so, record the level and call the function - is the third also the same? 
-  // If so, record the level and call the function - is the fourth also the same?
-  // If so, record the level and call the function - is the fifth also the same?
-  // If so, record the level and call the function - is the sixth also the same?
-  // If so, this is the base case. return 6 high score for that number type. We can just 
-  //use the number itself. 
-  //also, return the shortened array.
-
-  //Call this recursive function 6 times. Build an array.
-  //This is the highest scoring combinations. Add the array (reduce).
-
-  //So we can use recursion. The base case is a series of 6 - the highest score.
-  
-
-  //Another way is to use list checking. Just have an array of possible searches and go down in highest/
+//Here we just use list checking. Just have an array of possible searches and go down in highest/
   //value to lowest.
   //Generate the scoring table as a 2D array. 
   //Then search the array by column, which is to say digits.
@@ -83,6 +61,7 @@ function getScore(dice) {
   //in order to answer that, let's generate an array of scores and take a look.
 
   let scores = [];
+
   //now populate that with name and value. [name, value]
   scores.push(["123456", 1000]);
 
@@ -96,7 +75,7 @@ for (let i=1;i<=6;i++){
     }
   }
 }
-
+//3 of a kind and more of a kind
 for (let num = 2;num<=6;num++){
   for (let repeats = 3;repeats<=6;repeats++){
     scores.push([`${num.toString().repeat(+repeats)}`, num*(repeats-2)*100])
@@ -114,8 +93,11 @@ for (let num = 2;num<=6;num++){
   scores.push(["155", 200]);
   scores.push(["115", 250]);
 
+  //one more - a triple one is a special one
+  scores.push(["111", 1000]);
   scores.sort((a,b)=>b[1]-a[1]);
   console.log(scores);
+  
 
   //Now that I have a sorted list, just sort the dice roll and 
   //see if the combinations occur, going downwards.
@@ -124,17 +106,17 @@ for (let num = 2;num<=6;num++){
   let searchString = "";
   for (let i = 0;i<scores.length;i++){
     //Just search down the list and report when you find something
-    searchString = scores[i][0];
+    searchString = new RegExp(`${scores[i][0]}`);
     //Ok the search method is not working as described.
-    if (diceString.search(/searchString/)!=-1){
-      console.log(diceString.search(/scores[i][0]/));
-      console.log(diceString);
+    if (diceString.search(searchString)!=-1){
+      // console.log(diceString.search(searchString));
+      // console.log(diceString);
       console.log("found a", scores[i]);
       return scores[i][1];
     };
-    console.log(scores[i][0]);
-    console.log(diceString);
-    console.log(diceString.search(/scores[i][0]/));
+    // console.log(scores[i][0]);
+    // console.log(diceString);
+    // console.log(diceString.search(/scores[i][0]/));
   }
 //   //6 of a kind
 //   //detect a straight easily:
@@ -181,12 +163,12 @@ for (let num = 2;num<=6;num++){
 //     scoreboard[col].push(score);
 //     score = 0;
 //   }
-  
+  return 0;
 }
 
 console.log(getScore([2,2,4,4,1,1]),750);
-// console.log(getScore([2,3,4,2,2]), 200);
-// console.log(getScore([4,4,4]),400);
-// console.log(getScore([1,1,1,1,4,6]),2000);
+console.log(getScore([2,3,4,2,2]), 200);
+console.log(getScore([4,4,4]),400);
+console.log(getScore([1,1,1,1,4,6]),2000);
 
-  
+  //oh, we're not allowed to modify the input array. Fine I just have to copy it. 
