@@ -34,7 +34,42 @@ function sortCsvColumns(csvFileContent) {
   //Sort can't report a map like that. But I can make a sorted array then use find to 
   //make the map. 
 
-  
+  //Alternately, I could rearrange the array into elements that are organized into columns.
+  //then just sort based on the first element.
+  //That sounds a bit better.
+
+
+  //let sortedHeaders = arr[0].sort((a,b)=>a-b);
+
+  //so, how do I make this array of columns?
+
+  //I'll use a for loop to take apart the original string and make it a column array
+  let colArr = [];
+  let lastSemiPos = 0;
+  let lastCharPos = 0;
+  let charPos = 0;
+  let char = csvFileContent.charAt(charPos);
+  //track the column 
+  for (let k=0;k<rows;k++){
+    for (let i=0;i<cols;i++){
+      //look for semicolon
+      //ok working with the string directly creates an issue with the newline character
+
+      while (char!==";" && `${csvFileContent.charAt(charPos-1)}${char}`!=="\n"){
+        charPos++
+        console.log(charPos);
+        char = csvFileContent.charAt(charPos);
+        console.log(char);
+      }
+      console.log("one row sorted into columns")
+      colArr[i]=[];
+      colArr[i].push(csvFileContent.substring(lastCharPos,charPos))
+      lastCharPos = charPos;
+      charPos++;
+    }
+    console.log("colArr",colArr);
+  }
+
 }
 
 let str = "myjinxin2015;raulbc777;smile67;Dentzil;SteffenVogel_79\n"
