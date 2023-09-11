@@ -21,24 +21,13 @@ function sortCsvColumns(csvFileContent) {
   arr = arr.map(a=>a.split(";"));
   console.log(arr);
 
-  //maybe useful
+  //gather some properties for use later
   let cols = arr[0].length;
   let rows = arr.length;
   
-  //I can sort the headers alphabetically. But I need to sort the rest of the data in the same way then.
-
-  //I would like to generate a map like el 1=>pos 2, el2=>pos3 etc.
-  //[0,1,2,3,4,5,6] => [3,4,5,6,0,1,2] for [e,f,g,a,b,c,d]
-  //Then for each row, rearrange according to the correct pattern.
-
-  //Sort can't report a map like that. But I can make a sorted array then use find to 
-  //make the map. 
-
-  //Alternately, I could rearrange the array into elements that are organized into columns.
+  // I could rearrange the array into elements that are organized into columns.
   //then just sort based on the first element.
   //That sounds a bit better.
-
-  //let sortedHeaders = arr[0].sort((a,b)=>a-b);
 
   //so, how do I make this array of columns?
 
@@ -54,29 +43,9 @@ function sortCsvColumns(csvFileContent) {
       arrByCol[i].push(arr[k][i]);
     }
   }
-  console.log(arrByCol);
 
-
-  //now sort by column
-  let sortedByCol = arrByCol.sort((a,b)=> {
-
-  //Sort can't deal with the column titles normally so I used this sort function.
-
-    if(a[0] === b[0]) {
-        return 0;
-    }
-
-    if (a[0] > b[0]) {
-        return 1;
-    }
-
-    return -1;
-    
-  });
-
-  //anyways
-
-  console.log(sortedByCol);
+  //now sort by column. Simply using a[0]-b[0] won't work. A ternary a[0]>b[0]?-1:1 would be fine though.
+  let sortedByCol = arrByCol.sort((a,b)=> a[0].localeCompare(b[0]));
 
   //Now re-constitute the string before returning it
 
@@ -91,13 +60,11 @@ function sortCsvColumns(csvFileContent) {
     }
     //trim extra ;
     newStr = newStr.substring(0, newStr.length-1);
-
     newStr += "\n"
   }
 
-
-  console.log(newStr);
-  return newStr;
+  // trim extra \n
+  return `${newStr.substring(0,newStr.length-1)}`;
 }
 
 let str = "myjinxin2015;raulbc777;smile67;Dentzil;SteffenVogel_79\n"
