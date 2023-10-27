@@ -48,6 +48,9 @@ function findSequences(n){
       //sum = ((last-first+1)/2)(first + last)
       if (((last-first+1)/2)*(first + last) === n){
         pairs.push([first, last]);
+      } else if (((last-first+1)/2)*(first + last) < n){
+        //If it's less than n, there is no point in continuing.
+        break;
       }
     }
   }
@@ -68,6 +71,10 @@ function findSequences(n){
   return seqs;
 }
 
-console.log("test1", findSequences(15), [[7,8],[4,5,6],[1,2,3,4,5]]);
-console.log("test2", findSequences(20), [[2, 3, 4, 5, 6]]);
-console.log("test3", findSequences(3), [[1,2]]);
+// console.log("test1", findSequences(15), [[7,8],[4,5,6],[1,2,3,4,5]]);
+// console.log("test2", findSequences(20), [[2, 3, 4, 5, 6]]);
+// console.log("test3", findSequences(3), [[1,2]]);
+
+console.time();
+console.log("test3", findSequences(33323));
+console.timeEnd();

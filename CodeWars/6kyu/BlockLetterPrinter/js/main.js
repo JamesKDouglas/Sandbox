@@ -73,6 +73,7 @@ function blockPrint(input){
       // console.log( blockArr[j][i]);
       newString += blockArr[j][i];
     }
+    newString = newString.trimEnd();
     newString += "\n";
   }
   // console.log(newString);
@@ -81,4 +82,8 @@ function blockPrint(input){
 }
 
 console.log(blockPrint("heLLo WorLD"), "H   H EEEEE L     L      OOO        W   W  OOO  RRRR  L     DDDD\nH   H E     L     L     O   O       W   W O   O R   R L     D   D\nH   H E     L     L     O   O       W   W O   O R   R L     D   D\nHHHHH EEEEE L     L     O   O       W W W O   O RRRR  L     D   D\nH   H E     L     L     O   O       W W W O   O R R   L     D   D\nH   H E     L     L     O   O       W W W O   O R  R  L     D   D\nH   H EEEEE LLLLL LLLLL  OOO         W W   OOO  R   R LLLLL DDDD");
+//Close, but I think Codewars is complaining because there is a trailing space. The don't want any space after the very last character
+//So for example, here each line contains a space after the D. It shouldn't. 
+//I could either modify the reference alphabet so characters don't have spaces in them,
+//then add the space another way. Or I could delete the final space for the last letter.
 

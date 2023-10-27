@@ -41,4 +41,5 @@ function lastFibDigit(n){
 // console.log(lastFibDigit(1000),5);
 // console.log(lastFibDigit(1000000),5);
 
+// The above work fine, but this times out:
 console.log(lastFibDigit(2275196238983), "?");

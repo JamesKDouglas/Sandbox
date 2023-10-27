@@ -22,14 +22,14 @@
 //timeouts? not expected.
 
 function playPass(s, n) {
-  s = s.split("");//make it an array
-  
+  s = s.split("").map(el=>el.toString());//make it an array
+  console.log(s);
   let aCode = "a".charCodeAt(0);
   let zCode = "z".charCodeAt(0);
   
   let ACode = "A".charCodeAt(0);
   let ZCode = "Z".charCodeAt(0);
-  //
+  
   //Circular letter shift
   for (let i=0;i<s.length;i++){
     //is it a letter
@@ -60,23 +60,30 @@ function playPass(s, n) {
     //shift it by n
     //If we're over the value then go around
   }
-  
+  console.log(s);
+
+  //complement of 9
   for (let i=0;i<s.length;i++){
     //is the character a number?
-    if (s[i].charCodeAt(0)>="0".charCodeAt(0) && s[i].charCodeAt(0)>="9".charCodeAt(0)){
+    if (s[i].charCodeAt(0)>="0".charCodeAt(0) && s[i].charCodeAt(0)<="9".charCodeAt(0)){
       s[i] = 9 - +s[i];
       s[i].toString();
     }
   }
-  
-  //complement of 9
+  console.log("after compliment of 9", s);
+  s = s.map(el => el.toString());
+
   //Downcase/upcase
+  console.log(s[0])
   for (let i=0;i<s.length;i++){
-    if (i%0){
+    if (i%2 === 0){
+
+      // console.log(s[i]);
+      // console.log(typeof(s[i]));
       s[i] = s[i].toUpperCase();
     }else {
-      console.log(typeof(s[i]))
-            console.log((s[i]))
+      // console.log(typeof(s[i]));
+      // console.log((s[i]));
       s[i] = s[i].toLowerCase();
     }
   }

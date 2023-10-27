@@ -42,4 +42,4 @@ function sequence(n){
 console.log(sequence(5), 0)
 console.log(sequence(8), 1)
 console.log(sequence(12), 2)
-console.log(sequence(15), 1)
+console.log(sequence(15), 1)  

@@ -1,6 +1,6 @@
 //Input: integer expected. If it is a string return "Error".
 
-//Our goal is to multily the integer by 50 and add 6.
+//Our goal is to multiply the integer by 50 and add 6.
 
 //BigInts? Nope.
 //Boolean? Not expected.

@@ -5,13 +5,24 @@
 //bigInts? Nope. 
 //Special cases? No expected invalid inputs.
 //job size, timeouts? Nothing special. 
+//Yes there is a timeout of 600ms for a job that would take 1900ms if you just sort
+
 function maxProduct(a) {
-    //Sort the array
-    //Take the first two values, return the product.
-    
-    a = a.sort((a,b) => b-a);
-    return a[0]*a[1];
-    
+
+    function findHighest(a){
+      let highest = 0;
+      for (let i=0;i<a.length;i++){
+        if (a[i]>highest){
+          highest = a[i];
+        }
+      }
+      return highest;
+    }
+    let highest = findHighest(a);
+    let ind = a.findIndex(el => el==highest);
+    a.splice(ind,1,0);
+    let secondHighest = findHighest(a);
+    return highest*secondHighest;
   }
   
   console.log(maxProduct([56, 335, 195, 443, 6, 494, 252]), 218842);

@@ -32,7 +32,7 @@ decodeMorse = function(morseCode){
   //Then combine
   let str = letterArr.map(el => el.join("")).join(" ");
   
-  return str;
+  return str.trim();
 }
 
 console.log(decodeMorse('.... . -.--   .--- ..- -.. .'), 'HEY JUDE');

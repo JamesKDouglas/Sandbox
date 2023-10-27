@@ -36,8 +36,12 @@
 
 function cowboysDollars(boots) {
   console.log(boots);
-  boots[0] = boots[0].split("\n");
-  boots[1] = boots[1].split("\n");
+  //The input can be an array of arrays, or an array of strings.
+  //If it's two strings split it, if not just carry on.
+  if (typeof(boots[0])==="string"){
+    boots[0] = boots[0].split("\n");
+    boots[1] = boots[1].split("\n");
+  }
   //Go through each array and count === 
   let leftCount = 0;
   let rightCount = 0;
@@ -52,8 +56,7 @@ function cowboysDollars(boots) {
       rightCount++;
     };
   }
-  return `This Rhinestone Cowboy has ${rightCount} dollar bills in his right boot and ${leftCount} in the left
-`
+  return `This Rhinestone Cowboy has ${rightCount} dollar bills in his right boot and ${leftCount} in the left`;
 }
 
 let boots = [ '\n   ,|___|,\n   |[(1)]|\n   |     |\n   |[(1)]|\n   | ==  |\n   |[(1)]|\n   /    &|\n.-\'`  ,   )****\n|         |   **\n`~~~~~~~~~~    ^',

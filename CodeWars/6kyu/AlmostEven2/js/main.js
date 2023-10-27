@@ -43,7 +43,7 @@ function splitInteger(num,parts) {
 
   return arr;
 }
-  
+  ``
 console.log("hello!");
 
 // console.log(splitInteger(10,2));
