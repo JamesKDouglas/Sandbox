@@ -53,3 +53,4 @@ console.log(cycle(-1, [1,2,3], 2), 1);
 console.log(cycle(1, [1,2,3], 4), null);
 console.log(cycle(1, [1,2,2,3], 2), 2);
 
+``
