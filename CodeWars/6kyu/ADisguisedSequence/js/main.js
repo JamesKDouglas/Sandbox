@@ -46,7 +46,7 @@ function fcn (n) {
     // let outputList = [1,2]
     
     // for (let i=0n;i<bigN;i++){
-    //   Unp2 = 6n*Un*Unp1 /(5n*Un - Unp1);
+    //   Unp2 = 6n*Un*Unp1 /(5n*Un - Unp1);`
     //   outputList.push(Unp2);
     //   Un = Unp1;
     //   Unp1 = Unp2;
