@@ -57,7 +57,3 @@ function abundant(h){
 console.log(abundant(15), [[12], [4]]);
 console.log(abundant(19), [[18], [3]]);
 console.log(abundant(100), [[100], [17]]);
-
-
-//14, 3
-//14 => 7,2
