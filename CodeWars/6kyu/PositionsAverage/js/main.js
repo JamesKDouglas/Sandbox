@@ -37,31 +37,34 @@ function posAverage(s) {
   //and use the counter. Then toPrecision(10) for 10 decimals.
   
   let numArr = s.split(", ");
-  // console.log(numArr);
+  console.log(numArr);
   let counter = 0;
+  let combos = 0;
   for (let i=0;i<numArr.length;i++){//choose the first number
     // console.log("first Number:", numArr[i]);
     for (let j=i+1;j<numArr.length;j++){//choose the second number
       // console.log("compare it to:", numArr[j]);
+      // console.log("combo:", combos++);
       for (let k=0;k<numArr[0].length;k++){//first character
         // console.log("compare position", k, ":", numArr[i].charAt(k), numArr[j].charAt(k))
           if (numArr[i].charAt(k) === numArr[j].charAt(k)){
             counter++;
+            // console.log("found matching digit", counter, "th");
           }
       }
     }
   }
  let n = numArr.length;
-  console.log(counter);
-  console.log((n * (n-1)) / 2);
-  console.log(counter/((n * (n-1)) / 2))
+  // console.log("repeat digits:", counter);
+  // console.log(("Number of combos:", n * (n-1)) / 2);
+  // console.log(100*counter/[numArr[0].length*((n * (n-1)) / 2)])
 
   
-  // let perc = counter/(s[0].length*s.length);
-  // perc = perc.toPrecision(10);
-  // return perc;
+  let perc = 100*counter/[numArr[0].length*((n * (n-1)) / 2)];
+  perc = perc.toFixed(10);
+  return perc;
 }
 
-console.log(posAverage("6900690040, 4690606946, 9990494604"), 26.6666)
+// console.log(posAverage("6900690040, 4690606946, 9990494604"), 26.6666);
 console.log(posAverage("444996, 699990, 666690, 096904, 600644, 640646, 606469, 409694, 666094, 606490"),29.2592592593);
-console.log(posAverage("6900690040, 4690606946, 9990494604"), 26.6666666667);
+// console.log(posAverage("6900690040, 4690606946, 9990494604"), 26.6666666667);
