@@ -57,3 +57,16 @@ function solve(s){
 console.log(solve("1341"), 7);
 console.log(solve("1357"), 10);
 console.log(solve("1358"), 6);
+
+//a shorter solution Violle shares uses:
+// function solve(s){
+//   return [...s].reduce((t,n,i)=>t+(+n%2?i+1:0),0);
+// };
+
+//The solution relies on the fact that if a digit is odd, then you can add as many pre
+//digits to it as you want and it remains odd. Of course the max number of digits
+//you can add is the same as the index+1.
+
+//so it will go like
+// 1, 3, 13, (4), 1, 41, 341, 1341.
+//Of course it doesn't actually examine any numbers, but anyways it's a good algorithm.
