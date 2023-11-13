@@ -43,3 +43,4 @@ console.log(pell(2),2n);
 console.log(pell(5),29n);
 console.log(pell(10),2378n);
 
+``
