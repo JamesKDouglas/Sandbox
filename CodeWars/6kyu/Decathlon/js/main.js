@@ -99,3 +99,4 @@ let athletes3 = {
 console.log(decathlon(athletes3), "Usain")
 
 
+``
