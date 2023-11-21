@@ -73,3 +73,28 @@ console.log(lucasnum(-10), 123);
 console.log(lucasnum(10), 123);
 console.log(lucasnum(-1), -1);
 
+
+
+//there are a lot of minified solutions and ones that really should have an accompanying mathematical proof
+//But this one is a good recursive solution by rodming:
+
+//var saida = new Array();
+// function lucasnum(n){
+// 	if (n == 0) {
+// 		return 2;
+// 	} else {
+// 		if (n == 1) {
+// 			return 1;
+// 		}
+// 	}
+
+// 	if (!saida[n]) {
+//     if (n > 0) {
+//       saida[n] = lucasnum(n-1) + lucasnum(n-2);
+//     } else {
+//       saida[n] = lucasnum(n+2) - lucasnum(n+1);
+//     }    
+// 	}
+
+//   return saida[n];
+// }
