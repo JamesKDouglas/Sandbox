@@ -1,4 +1,4 @@
-//The input will be an array representing a series of throws and 
+`//The input will be an array representing a series of throws and 
 //a ball entering one of 3 hoops.
 //There is a red, green and blue hoop.
 //ex: ['R','R','R','R'] represents the ball being thrown four times in a row into
@@ -70,4 +70,4 @@ const prizeCounter = (s) => {
 
 console.log(prizeCounter(['R','R','R','R']), 800);
 console.log(prizeCounter(['R', 'B', 'G', 'G', 'B', 'B', 'B', 'G', 'B']), 1100);
-console.log(prizeCounter(['G', 'G', 'G', 'B', 'B', 'B', 'G']), 1200);
+console.log(prizeCounter(['G', 'G', 'G', 'B', 'B', 'B', 'G']), 1200);`
