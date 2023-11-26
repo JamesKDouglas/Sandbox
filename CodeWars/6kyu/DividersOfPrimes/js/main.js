@@ -78,4 +78,4 @@ console.log(getDividers([5,7,11], [0,0,0]), [1]);
 
 //A lot of shorter versions simply calculate the total product and then go from 1 to half the number looking for factors
 //That works fine but it is computationally expensive. I prefer this algebraic approach, since we do not have any 
-//clear guidance for the maximum number size or timeouts.
+//`clear guidance for the maximum number size or timeouts.
