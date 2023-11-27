@@ -18,7 +18,7 @@
 //BigInts? No.
 //Timeouts? 12 000 ms. No large jobs. 
 
-function cycle2(n) {
+function cycle(n) {
   console.log("input num:", n);
   //early returns:
   //if a number is divisible by 2, 5 or 10 then it's not coprime so 
@@ -72,16 +72,26 @@ function cycle2(n) {
   // console.log(stringNum);
 
   let repeatSeqLength = 0;
-  for (let i=Number(digits)/2;i>0;i--){
-    seg1 = stringNum.substring(0,i);
-    console.log("segment 1:", seg1);
-    seg2 = stringNum.substring(i,2*i);
-    console.log("segment2:", seg2);
-    if (seg1 == seg2){
-      repeatSeqLength = i;
-      break;
+  console.time("forloop");
+  //This is the slow part. 
+  for (let i=zeros;i<Number(digits)/2;i++){
+
+    //What if I just look at the first character? Only if they match do I look at the rest.
+    //Nope, that makes it slower by 4x. Looking at the first 2 characters speeds it up again by 4x. Comparing the first 3 characters
+    //doesn't go faster, but again runs more slowly.
+    if (stringNum[i]+stringNum[i+1]+stringNum[i+2] == stringNum[2*i]+stringNum[2*i+1]+stringNum[2*i+2]){
+      seg1 = stringNum.substring(0,i);
+      // console.log("segment 1:", seg1);
+      seg2 = stringNum.substring(i,2*i);
+      // console.log("segment2:", seg2);
+      if (seg1 == seg2){
+        repeatSeqLength = i;
+        break;
+      }
     }
+    
   }
+  console.timeEnd("forloop");
   return repeatSeqLength;
 
 }
@@ -89,31 +99,40 @@ function cycle2(n) {
 //ok, well the above works but times out because it is too slow. A faster way is 
 //from ignovak's solution, which is what - a process of long division? Each time we generate
 //another decimal. And eventually we get back to the starting state, which is val=1 .
-function cycle(n) {
+function cycle2(n) {
   console.log("testing: ", n)
   if (n % 2 == 0 || n % 5 == 0) return -1;
 
   let i = 0;
   let val = 1;
-  
+  console.time("whileloop");
   while (++i) {
-    console.log("i: ", i);
-    console.log("val:", val);
+    // console.log("i: ", i);
+    // console.log("val:", val);
     val = val * 10 % n;
-    console.log("now val is: ", val);
-    if (val == 1) return i;
+    // console.log("now val is: ", val);
+    if (val == 1) {
+      console.timeEnd("whileloop");
+      return i;
+    }
   }
+  
+
 
 }
 
 // console.log(cycle(33), 2);
 // console.log(cycle(18118), -1);//early return for all even #s.
-console.log(cycle(69), 22);
+// console.log(cycle(69), 22);
 // console.log(cycle(65), -1);//multiple of 5
 // console.log(cycle(197), 98);
-// console.log(cycle(218713),9744)
+// console.log(cycle2(218713),9744)
 // console.log(cycle(156593),156592);
+console.log(cycle(426437), "?");
 // console.log(cycle(89049), "?");
+
+//Using a timer, I can see that the long division method is 10 times faster, taking 1ms to find a repeat of 38000 long rather than about 
+//10ms. 
 
 //Sandbox:
 //Javascript only handles 17 decimals. In order to handle something like 200,
