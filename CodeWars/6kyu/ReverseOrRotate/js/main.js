@@ -58,7 +58,7 @@ function revrot(str, sz) {
       // console.log("reversed a piece!");
     } else {
       //rotate
-      //cut off first char
+      //cut off first char`
       let firstChar = pieces[i].split("")[0];
       // console.log(firstChar);
       let piece = pieces[i].split("");
@@ -78,8 +78,8 @@ function revrot(str, sz) {
   return pieces.join("");
 }
 
-console.log(revrot("123456987654",6), "234561876549");
+console.log(revrot(`"123456987654",6), "234561876549");
 console.log(revrot("123456987653",6), "234561356789");
 console.log(revrot("", 8), "");
 console.log(revrot("1234", 5), "");
-console.log(revrot("1234", -5), "");
+console.log(revrot("1234", -5), "");``
