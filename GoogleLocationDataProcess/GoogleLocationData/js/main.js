@@ -123,7 +123,7 @@ function overnight(){
 
             // I used this to generate the table of overnight locations not at 4525 st george st
             if (lastEnd.getDate() !== end.getDate()){
-                console.log(i);
+                console.log(i); 
                 console.log(start, ";", i.placeVisit.location.address, ";" , i.placeVisit.location.name , ",");
             }
             //This helps singulate to show the first entry of the day (where I woke up)

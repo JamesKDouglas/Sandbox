@@ -48,4 +48,4 @@ function nameInStr(str, name){
 // console.log(nameInStr('Next to a lake', 'chris'), false)
 // console.log(nameInStr('Under a sea', 'chris'), false)
 
-console.log(nameInStr('eowtmebohi a yt tl ln mk hamv  yahy xaaetmtij qwmra  ha aveownlazklhdiejyltiade', 'Ashley'), true);
+console.log(nameInStr('eowtmebohi a yt tl ln mk hamv  yahy `xaaetmtij qwmra  ha aveownlazklhdiejyltiade', 'Ashley'), true);
