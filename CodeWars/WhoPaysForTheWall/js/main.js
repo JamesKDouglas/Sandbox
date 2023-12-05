@@ -26,3 +26,4 @@ function whoIsPaying(name){
 console.log(whoIsPaying("Mexico"), ["Mexico", "Me"]);
 console.log(whoIsPaying("Bob"), ["Bob", "Bo"]);
 console.log(whoIsPaying("Bobberson"), ["Bobberson", "Bo"]);
+``
