@@ -91,7 +91,7 @@ console.log(getSolution([1, 5, 3, 2, 5], -2), false);
 // Kosia has a more concise solution,
 // function getSolution(arr, sum) {
 //   let sums = new Set([arr[0]]);
-//   for (let i = 1; i < arr.length; i++) {
+//   for (let i = 1; i < arr.length; i++) {`
 //     let nextSums = new Set();
 //     for (let x of sums)
 //       nextSums.add(x + arr[i]).add(x - arr[i]);
