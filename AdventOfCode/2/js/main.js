@@ -74,26 +74,62 @@ function parseData(input){
     return newEl;
   });
 
+  //separate the trials
+  data = data.map(el => [el[0], el[1].trim().split(";")
+  //.map((el) => {
+    // console.log(el);
+    // if (el.includes(",")) { el.split(", ") }
+  // } )
+]);
   
-  data = data.map(el => [el[0], el[1].trim().split(";")])
-  
-  //console.log(data);
+  console.log(data);
+
+  //Now separate the color results in each trial
 
   let newData = [];
   for (let i=0;i<data.length;i++){
     //for each game
     let game = [];
-    game = [data[i][0], data[i][1].map(el => el.split(', ').map(el=>el.trim()).sort((a,b) => a.charCodeAt(a.length-1)-b.charCodeAt(b.length-1)) )]
-       
+
+    //take the trial data and separate it, then sort so the color order is consistent
+    game = [data[i][0], data[i][1].map(el => el.split(', ').map(el=>el.trim()).sort((a,b) => a.charCodeAt(a.length-1)-b.charCodeAt(b.length-1)) )];
+
+    console.log("game data before beginning:", game);
+
+    //now for each game, take the trials and make the data simple numerical data.
+    //This is complicated because data is often missing and I have to use a 0 to fill.
+    for (let j=0;j<game[1].length;j++){
+      //Now for each game I remake each trial
+      let simpleSampleData = [0,0,0];
+      for (let k=0;k<game[1][j].length;k++){
+        //I want the data in the order of [R,G,B]. Often, data is missing and we place a 0 there.
+        console.log("k:, ", k)
+        console.log(game[1][j][k]);
+        if (game[1][j][k].includes("red")){
+
+          simpleSampleData[0] = game[1][j][k].split(" ")[0];
+          console.log("found red data", simpleSampleData);
+
+        } else if (game[1][j][k].includes("green")){
+          simpleSampleData[1] = game[1][j][k].split(" ")[0];
+          console.log("found green data", simpleSampleData);
+
+        } else if (game[1][j][k].includes("blue")){
+          simpleSampleData[2] = game[1][j][k].split(" ")[0];
+          console.log("found blue data", simpleSampleData);
+        }
+      }
+      game[1][j] = simpleSampleData;
+    }
     newData.push(game);
   }
   
   console.log(newData);
-  //Not bad, but now I somehow have to turn,
+// Not bad, but now I somehow have to turn,
 // ['3 green'] => [0,0,3]
 // ['15 red', '7 blue', '1 green'] => [15,7,1]
 // I guess use if string.contains("red") then extract first part (split by " ") into arr[0]. 
-, 
+
 
   // console.log([data[0][0],data[0][1].split(";")]);
 }
