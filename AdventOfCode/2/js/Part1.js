@@ -9,14 +9,15 @@
 //This represents a bag containing cubes. Each game starts with a certain number of cubes of each color. 
 //The sets delineated by ; are samples drawn from the bag.
 
-//The goal is to determine the minimum number of cubes possible for each game to be possible.
-//That is, gather the maximum red, green, blue, cubes present in the sampling. For example in game on it's [7, 18, 6]
-//Generate a checksum by taking these numbers for each game and multiplying them together then adding all of the products.
+//Imagine that a sample is drawn, which is composed of
+//12 red cubes, 13 green cubes, and 14 blue cubes
 
-//return the checksum.
+//Determine which games this is possible for. Then add together all of the game numbers for which it is possible.
+
+//return the sum of the game numbers
 
 //no invalid inputs.
-//no edge cases. Just calculate the 1 value from 1 dataset.
+//no edge cases. the problem is for only 1 input set and 1 sample set.
 //timeouts not a problem.
 
 //First, lets import the data from a text file
@@ -49,12 +50,18 @@ function importText(textFile) {
 // games = [ [[game #], [R,G,B], [R,G,B], [R,G,B]], [[game #], [R,G,B], [R,G,B], [R,G,B]]] 
 //The input text mixes them up, often. So they must be sorted.
 
-//Then I'll go through the games like games[i][1][j] where i is the game index, 1 is the sampls drawn and j examines each sample.
+//Then prepare the test case as an array, [12, 13, 14]. That's 12 red, 13 green 14 blue.
 
-//for each game compute a maxRed, maxGreen, maxBlue;
+//So that's a 3D array. Game, column, number. The game # is an array to keep it consistent but there is only 1 value.
 
-//Then find the product and add it to a sum.
+//Then I'll go through the games like games[i][j] where i counts upwards and j goes from 1 to the end of the game.
 
+//For each game make an R list, G and B array. [[R,R,R],[B,B,B],[G,G,G]]. Then use the array.every() method to see if all the R, B and G's are below or equal to the threshold.
+
+//If it passes the test, add the game # to a sum.
+
+
+// Game 1: 2 green, 6 blue, 7 red; 12 green, 6 blue, 3 red; 5 red, 18 green, 4 blue
 function parseData(input){
   //split into games
   let data = input.split("\n");
@@ -68,11 +75,15 @@ function parseData(input){
 
   //separate the trials
   data = data.map(el => [el[0], el[1].trim().split(";")
+  //.map((el) => {
+    // console.log(el);
+    // if (el.includes(",")) { el.split(", ") }
+  // } )
   ]);
   
   // console.log(data);
 
-  //Now manage the trials/samples
+  //Now separate the color results in each trial
 
   let newData = [];
   for (let i=0;i<data.length;i++){
@@ -109,41 +120,42 @@ function parseData(input){
     }
     newData.push(game);
   }
+  
   // console.log(newData);
+
   return newData;
 }
 
 let dataInFrame = parseData(input);
 
 // console.log(dataInFrame);
-
-//Now to deal with part 1 or part 2 - the question posed.
-
 let sum = 0;
-let maxRed, maxGreen, maxBlue;
-
+let sampleCase = [12, 13, 14];
 for (let i=0;i<dataInFrame.length;i++){
   //go through each game.
-  maxRed = maxGreen = maxBlue = 0;
 
-  //Inspect each trial
+  //And consider each trial in each game
+  let rejectGame = false;
     for (let j=0;j<dataInFrame[i][1].length;j++){
-        if (+dataInFrame[i][1][j][0]>maxRed){
-          maxRed = +dataInFrame[i][1][j][0];
+        if (+dataInFrame[i][1][j][0]>sampleCase[0] || +dataInFrame[i][1][j][1]>sampleCase[1] || +dataInFrame[i][1][j][2]>sampleCase[2]){
+          console.log("game #", +dataInFrame[i][0], " rejected. Sample: ", dataInFrame[i][1][j])
+          rejectGame = true;
+          break;
         } 
-        
-        if (+dataInFrame[i][1][j][1]>maxGreen){
-          maxGreen = +dataInFrame[i][1][j][1];
-        }
-        
-        if (+dataInFrame[i][1][j][2]>maxBlue){
-          maxBlue = +dataInFrame[i][1][j][2];
+        else {
+          console.log("game #", +dataInFrame[i][0], " accepted so far. Sample: ", dataInFrame[i][1][j])
+          // sum += +dataInFrame[i][0];
+          // console.log("sum after adding the game: ", sum);
         }
     }
 
-    sum += maxRed*maxBlue*maxGreen;
+   if (!rejectGame){
+          console.log("game #", +dataInFrame[i][0], " accepted.");
+          console.table(dataInFrame[i][1]);
+          sum += +dataInFrame[i][0];
+          console.log("sum after adding the game: ", sum);
+   }
 }
-
 console.log(sum);
 
 
