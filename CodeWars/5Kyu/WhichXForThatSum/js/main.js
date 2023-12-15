@@ -73,3 +73,19 @@ function solve(m) {
 console.log(solve(8.0), 0.7034648345913732);
 console.log(solve(2.0), 0.5000);
 console.log(solve(4.00), 6.096117967978e-01)
+
+//hencethus offers,
+//const solve = m => 1 - ((4*m + 1)**.5 - 1) / (2*m);
+
+//m = `x + 2x**2 + 3x**3 ... nx**n` if n is very high and x is less than 1 but more than 0.
+
+// x                      = 1 - ((4m + 1)**.5 - 1) / (2m)
+// 2m(x-1)                = - ((4m + 1)**.5 - 1)
+// 2mx -2m                = -(4m + 1)**.5 + 1
+// 2mx -2m  -1            = -(4m + 1)**.5
+// (-2mx +2m + 1)**2      = (4m + 1)
+
+//Ok, well that might be true but I'm stuck as to why.
+ 
+
+
