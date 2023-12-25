@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django demo</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'splash/site.css' %}" />
+</head>
+<body>
+    <div class="container">
+        <div class = "header">
+            <h1 class="title">Retina</h1>
+            <h2>Improve your photos</h2>
+            <h3>Turn an underexposed photo into a work of art</h3>
+
+            <button>Try it</button>
+
+            <button>about us</button>
+        </div>
+
+        <div class = "frame">
+            {% load static %}
+            <img class = "blurredImage" src="{% static 'splash/candle.jpeg' %}" />
+        </div>  
+    </div>
+</body>
+</html>
