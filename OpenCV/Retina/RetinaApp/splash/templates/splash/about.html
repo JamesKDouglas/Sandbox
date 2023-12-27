@@ -27,18 +27,19 @@
                     _____________
                 </div>
             </div>
-            <button class="big">MAKE YOUR OWN PHOTO</button>
-            <!-- <a href="about/"> -->
-                <button id="about" class = "small">ABOUT US</button>
-            <!-- </a> -->
+            <button class="big" onclick="location.href='app/'" type="button">
+                MAKE YOUR OWN PHOTO
+            </button>
+
+            <button class = "small" onclick="location.href='about/'" type="button">ABOUT US!</button>
+
+            <div> yammer yammmer yammer blah blah blah</div>
         </div>
 
-        <div class = "frame" id="contentSpot">
+        <div class = "frame">
             {% load static %}
             <img class = "blurredImage" src="{% static 'splash/candle.jpeg' %}" />
         </div>  
-        {% load static %}
-        <script type="text/javascript" src="{% static 'splash/main.js'%}"></script>
     </div>
 </body>
 </html>

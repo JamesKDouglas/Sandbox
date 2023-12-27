@@ -19,6 +19,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path("", include("splash.urls")),
+    path("app/", include("app.urls")),
     path("hello/", include("splash.urls")),
     path('admin/', admin.site.urls)
 ]

@@ -28,14 +28,17 @@
                 </div>
             </div>
             <button class="big">MAKE YOUR OWN PHOTO</button>
-            <!-- <a href="about/"> -->
-                <button id="about" class = "small">ABOUT US</button>
-            <!-- </a> -->
         </div>
-
+        <form action="submit">
+            <label for="upload">Upload a photo:</label>
+            <input id="upload" name="upload" type="file">
+        </form> 
+        <input type="file">
         <div class = "frame" id="contentSpot">
-            {% load static %}
-            <img class = "blurredImage" src="{% static 'splash/candle.jpeg' %}" />
+            <!-- have a spaceholder? -->
+            <!-- {% load static %}
+            <img class = "blurredImage" src="{% static 'splash/candle.jpeg' %}" /> -->
+
         </div>  
         {% load static %}
         <script type="text/javascript" src="{% static 'splash/main.js'%}"></script>
