@@ -3,4 +3,5 @@ from splash import views
 
 urlpatterns = [
     path("", views.home),
+    
 ]

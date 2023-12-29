@@ -1,7 +1,7 @@
 from django.shortcuts import render
-import re
+# import re
 from django.utils.timezone import datetime
-from django.http import HttpResponse
+# from django.http import HttpResponse
 
 def home(request):
     return render(

@@ -1,6 +1,6 @@
 """web_project URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The `urlpatterns` helps to map URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
 Function views
@@ -17,11 +17,16 @@ from django.contrib import admin
 from django.urls import include, path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from django.views.static import serve
+from django.conf import settings
+
 urlpatterns = [
     path("", include("splash.urls")),
-    path("app/", include("app.urls")),
-    path("hello/", include("splash.urls")),
-    path('admin/', admin.site.urls)
+    # path("hello/", include("splash.urls")),
+    path('app/', include("app.urls")),
+    path('hello/', include("splash.urls")),
+    path('admin/', admin.site.urls),
+    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT})
 ]
 
 urlpatterns += staticfiles_urlpatterns()

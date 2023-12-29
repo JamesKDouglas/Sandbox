@@ -1,0 +1,4 @@
+#requirement.txt
+#django version
+Django==3.2
+Pillow>= 8.0

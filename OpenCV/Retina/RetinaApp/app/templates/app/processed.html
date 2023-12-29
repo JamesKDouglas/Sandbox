@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retina</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'app/site.css' %}" />
-    {% load static %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'app/favicon.ico' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'splash/site.css' %}" />
 </head>
 <body>
     <div class="container">
@@ -30,19 +28,7 @@
             </div>
             <!-- <button class="big">MAKE YOUR OWN PHOTO</button> -->
         </div>
-
-        <form method = "post" enctype="multipart/form-data">
-            <!-- <input type="file"> -->
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Upload</button>
-        </form>
-        <div class = "frame" id="contentSpot">
-            <!-- have a spaceholder? -->
-            <!-- {% load static %}
-            <img class = "blurredImage" src="{% static 'splash/candle.jpeg' %}" /> -->
-
-        </div>  
+<!-- processed image goes here! Show before and after. -->
         {% load static %}
         <script type="text/javascript" src="{% static 'splash/main.js'%}"></script>
     </div>

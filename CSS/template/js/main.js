@@ -16,8 +16,3 @@ about.addEventListener("click",   (event) => {
 
 },
 false,);
-
-function handleHover(e) {
-  console.log("hover!", e)
-  document.getElementById("mainBody").setAttribute("style", "background-color:blue");
-}
