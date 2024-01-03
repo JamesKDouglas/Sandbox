@@ -1,2 +1,4 @@
 *.csv
 MongoDBPractice/
+CodeWars/python/.venv/
+OpenCV/Retina/RetinaApp/.venv/
