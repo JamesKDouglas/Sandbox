@@ -30,27 +30,35 @@ def solution(s):
     if len(s) == 0:
         return ""
 
-    firstLetter = s[1]
-    secondLetter = s[2]
+    firstLetter = ""
+    secondLetter = ""
     j = 0;
 
     #python for loops are strange because you cannot simply skip the iterator ahead. We can just use a while loop instead
-    while j<len(s)-1:
-        j += 1
+    while j<len(s):
+        print("examining letter at position", j)
+        print("which is a,", s[j])
         if j>2:
-            if firstLetter.upper()==firstLetter and secondLetter.upper()!=secondLetter:
-#                 found a camel case! Insert a space
-                #   do nothing if there is already a space
-                if s[j-2]!=" ":
-                    s = s[0:j-2] + " " + s[j-2:]
-                    j+=1 #we need to skip ahead again otherwise it adds another space!
             firstLetter = s[j-1]
             secondLetter = s[j] 
+            if firstLetter.upper()==firstLetter and secondLetter.upper()!=secondLetter:
+                print("found a camel case! ", firstLetter, " and, ", secondLetter)
+                # print("found a camel case! ", s[j-1], " and, ", s[j])
+                #  found a camel case! Insert a space
+                #  do nothing if there is already a space
+                if s[j-1]!=" ":
+                    s = s[0:j-1] + " " + s[j-1:]
+                    j+=1 #we need to skip ahead again otherwise it adds another space!
+            # firstLetter = s[j-1]
+            # secondLetter = s[j] 
+        j += 1
     return s
     
-print(solution("camelCasing"), "camel Casing") # regular parse
-print(solution("some string to Parse"), "some string to Parse") # avoid adding an extra space
-print(solution("A sentence."), "A sentence.") # avoid adding a space to the start
-print(solution("AVariableUsingCamelCase"), "A Variable Using Camel Case") # regular parse, also avoid adding space to start
-print(solution(""), "")
+# print(solution("camelCasing"), "camel Casing") # regular parse
+# print(solution("some string to Parse"), "some string to Parse") # avoid adding an extra space
+# print(solution("A sentence."), "A sentence.") # avoid adding a space to the start
+# print(solution("AVariableUsingCamelCase"), "A Variable Using Camel Case") # regular parse, also avoid adding space to start
+# print(solution(""), "")
 
+#one more edge case - camel case is near the end
+print(solution("workTellAbleGo"), "work Tell Able Go")
