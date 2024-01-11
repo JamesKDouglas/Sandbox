@@ -26,20 +26,31 @@ def solution(s):
 # capital letters. A series of capital letters gets the final one cut off.
 # another edge case "edgeCaseA"=> edge Case A? Well it isn't part of our cases.
 
+#early return 
+    if len(s) == 0:
+        return ""
+
     firstLetter = s[1]
     secondLetter = s[2]
-    for i, letter in enumerate(s):
-        if i>2:
+    j = 0;
+
+    #python for loops are strange because you cannot simply skip the iterator ahead. We can just use a while loop instead
+    while j<len(s)-1:
+        j += 1
+        if j>2:
             if firstLetter.upper()==firstLetter and secondLetter.upper()!=secondLetter:
 #                 found a camel case! Insert a space
                 #   do nothing if there is already a space
-                if s[i-2]!=" ":
-                    s = s[0:i-2] + " " + s[i-2:]
-            firstLetter = s[i-1]
-            secondLetter = s[i] 
+                if s[j-2]!=" ":
+                    s = s[0:j-2] + " " + s[j-2:]
+                    j+=1 #we need to skip ahead again otherwise it adds another space!
+            firstLetter = s[j-1]
+            secondLetter = s[j] 
     return s
     
-print(solution("camelCasing"), "camelCasing")
-print(solution("some string to Parse"), "some string to Parse")
-print(solution("A sentence."), "A sentence.")
-print(solution("AVariableUsingCamelCase"), "A Variable Using Camel Case")
+print(solution("camelCasing"), "camel Casing") # regular parse
+print(solution("some string to Parse"), "some string to Parse") # avoid adding an extra space
+print(solution("A sentence."), "A sentence.") # avoid adding a space to the start
+print(solution("AVariableUsingCamelCase"), "A Variable Using Camel Case") # regular parse, also avoid adding space to start
+print(solution(""), "")
+
