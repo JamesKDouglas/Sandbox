@@ -43,14 +43,11 @@ def solution(s):
             secondLetter = s[j] 
             if firstLetter.upper()==firstLetter and secondLetter.upper()!=secondLetter:
                 print("found a camel case! ", firstLetter, " and, ", secondLetter)
-                # print("found a camel case! ", s[j-1], " and, ", s[j])
                 #  found a camel case! Insert a space
                 #  do nothing if there is already a space
                 if s[j-1]!=" ":
                     s = s[0:j-1] + " " + s[j-1:]
                     j+=1 #we need to skip ahead again otherwise it adds another space!
-            # firstLetter = s[j-1]
-            # secondLetter = s[j] 
         j += 1
     return s
     
