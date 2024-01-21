@@ -8,9 +8,14 @@
 </head>
 <body>
     <form action = "/uploadfile/" method="post" enctype="multipart/form-data">
+        <input type="radio" id="bw" name="filter" value="bw">
+        <label for="bw">Black and white</label><br>
+        <input type="radio" id="red" name="filter" value="red">
+        <label for="red">Red channel only</label><br>
+
         <label for="file">File</label>
         <input id="file" name="file" type="file" />
         <button>Upload</button>
-      </form>
+    </form>
 </body>
 </html>
