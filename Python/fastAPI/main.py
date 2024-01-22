@@ -11,6 +11,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, UploadFile, Form, Depends
 import shutil as shutil
 
+from fastapi.responses import FileResponse
+
 # for numpy arrays
 from PIL import Image
 from io import BytesIO
@@ -43,6 +45,7 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
     
     photo = reqBody.file
     photo2 = copy.deepcopy(photo)
+    photo3 = copy.deepcopy(photo)
 
     # this reading as a numpy array seems to mess up the saving as a jpeg. Why can't they coexist?
 
@@ -55,4 +58,4 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
     # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
     # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
     
-    return {"filter": reqBody.filter}
+    return FileResponse("./files/"+photo.filename)
