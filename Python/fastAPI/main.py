@@ -37,6 +37,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def saveAsNumpy(data):
     image = read_imagefile(data.file.read())
     np.save("./files/" + data.filename, image)
+    # after reading a file remember to close it if you want to read it again!
+    data.file.seek(0)
     return
 
 def read_imagefile(data) -> Image.Image:
@@ -47,16 +49,14 @@ def read_imagefile(data) -> Image.Image:
 async def read_root(reqBody: FilterMyPhoto = Depends()):
     
     photo = reqBody.file
-    photo2 = copy.deepcopy(photo)
-    # photo3 = copy.deepcopy(photo)
-    # this reading as a numpy array seems to mess up the saving as a jpeg. Why can't they coexist?
 
     fileNameOriginal = "./files/"+photo.filename
     
+    saveAsNumpy(photo)
+
     with open(fileNameOriginal, "wb") as buffer:
         shutil.copyfileobj(photo.file, buffer)
 
-    saveAsNumpy(photo2)
 
     if reqBody.filter == "bw":
         # im_gray = cv2.imread(fileNameOriginal, cv2.IMREAD_GRAYSCALE)
@@ -65,6 +65,10 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
         image = cv2.imread(fileNameOriginal) 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
         cv2.imwrite("./files/"+"f_"+ photo.filename, gray_image)
+
+        # image = cv2.imread(fileNameOriginal) 
+        # kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+        # image = cv2.filter2D(image, -1, kernel)
 
     # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
     # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
