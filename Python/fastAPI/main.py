@@ -45,6 +45,15 @@ def read_imagefile(data) -> Image.Image:
     image = Image.open(BytesIO(data))
     return image
 
+def adjust_contrast_brightness(img, contrast:float=1.0, brightness:int=0):
+    """
+    Adjusts contrast and brightness of an uint8 image.
+    contrast:   (0.0,  inf) with 1.0 leaving the contrast as is
+    brightness: [-255, 255] with 0 leaving the brightness as is
+    """
+    brightness += int(round(255*(1-contrast)/2))
+    return cv2.addWeighted(img, contrast, img, 0, brightness)
+
 @app.post("/uploadfile/")
 async def read_root(reqBody: FilterMyPhoto = Depends()):
     
@@ -62,15 +71,24 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
         # im_gray = cv2.imread(fileNameOriginal, cv2.IMREAD_GRAYSCALE)
         # (thresh, im_bw) = cv2.threshold(im_gray, 255, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         
-        image = cv2.imread(fileNameOriginal) 
-        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
-        cv2.imwrite("./files/"+"f_"+ photo.filename, gray_image)
-
         # image = cv2.imread(fileNameOriginal) 
+        # gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+        # cv2.imwrite("./files/"+"f_"+ photo.filename, gray_image)
+        # return FileResponse("./files/"+"f_"+photo.filename)
+
+        image = cv2.imread(fileNameOriginal) 
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+
+        # "sharpen"
         # kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
         # image = cv2.filter2D(image, -1, kernel)
+
+        image = adjust_contrast_brightness(image,1.25,0)
+        filename = "./files/"+"f_" + "br" + photo.filename
+        cv2.imwrite(filename, image)
+        return FileResponse(filename)
 
     # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
     # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
     
-    return FileResponse("./files/"+"f_"+photo.filename)
+    
