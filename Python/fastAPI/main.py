@@ -11,6 +11,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, UploadFile, Form, Depends
 import shutil as shutil
 
+import cv2
+# import cv
+
 from fastapi.responses import FileResponse
 
 # for numpy arrays
@@ -45,17 +48,25 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
     
     photo = reqBody.file
     photo2 = copy.deepcopy(photo)
-    photo3 = copy.deepcopy(photo)
-
+    # photo3 = copy.deepcopy(photo)
     # this reading as a numpy array seems to mess up the saving as a jpeg. Why can't they coexist?
 
-    saveAsNumpy(photo2)
+    fileNameOriginal = "./files/"+photo.filename
     
-    with open("./files/"+photo.filename, "wb") as buffer:
+    with open(fileNameOriginal, "wb") as buffer:
         shutil.copyfileobj(photo.file, buffer)
 
+    saveAsNumpy(photo2)
+
+    if reqBody.filter == "bw":
+        # im_gray = cv2.imread(fileNameOriginal, cv2.IMREAD_GRAYSCALE)
+        # (thresh, im_bw) = cv2.threshold(im_gray, 255, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        
+        image = cv2.imread(fileNameOriginal) 
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+        cv2.imwrite("./files/"+"f_"+ photo.filename, gray_image)
 
     # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
     # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
     
-    return FileResponse("./files/"+photo.filename)
+    return FileResponse("./files/"+"f_"+photo.filename)
