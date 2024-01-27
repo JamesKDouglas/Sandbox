@@ -27,7 +27,7 @@ async function handleSubmit(e){
     data.append('file', input.files[0])
     data.append('filter_param', filter)
 
-    fetch(`/uploadfile/${filename}&filter_param=${filter}`, {
+    fetch(`/uploadfile/?filename=${filename}&filter_param=${filter}`, {
         method: 'POST',
         body: data
     })

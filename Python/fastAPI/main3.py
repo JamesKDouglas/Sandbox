@@ -1,4 +1,4 @@
-# This file is from a commit which works to serve back an image file. 
+# This file is from a commit which works to serve back an image file. It is mostly unmodified!
 
 # to make a basic fastAPI server all you do is
 # make a virtual environment with python -m venv .venv

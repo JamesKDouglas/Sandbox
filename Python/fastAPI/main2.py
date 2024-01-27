@@ -1,5 +1,10 @@
 # This dispenses with the custom data class and uses the default data types 
 
+# This method requires the ?filename= prefix in the URL. Main4 requires that prefix to be removed.
+# also in main4 there was a complaint from trying to use the Query datatype. But it works fine here.
+
+# Does this method take information from the body of the request or the URL?
+
 # to make a basic fastAPI server all you do is
 # make a virtual environment with python -m venv .venv
 # activate the environment with source activate
