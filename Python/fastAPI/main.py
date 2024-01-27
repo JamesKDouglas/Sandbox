@@ -10,17 +10,12 @@
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, UploadFile, Form, Depends
 import shutil as shutil
-
 import cv2
-# import cv
-
 from fastapi.responses import FileResponse
-
 # for numpy arrays
 from PIL import Image
 from io import BytesIO
 import numpy as np
-import copy
 
 # this helps process the POST request body to include radio button info
 from dataclasses import dataclass
@@ -29,7 +24,6 @@ class FilterMyPhoto:
     filter: str = Form(...) 
     file: UploadFile = Form(...)
 
-# On with the main bit:
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -54,28 +48,23 @@ def adjust_contrast_brightness(img, contrast:float=1.0, brightness:int=0):
     brightness += int(round(255*(1-contrast)/2))
     return cv2.addWeighted(img, contrast, img, 0, brightness)
 
+# so far I've been unable to both take query parameters in as well as send an image back with fileResponse.
+
 @app.post("/uploadfile/")
 async def read_root(reqBody: FilterMyPhoto = Depends()):
     
     photo = reqBody.file
-
     fileNameOriginal = "./files/"+photo.filename
-    
     saveAsNumpy(photo)
 
     with open(fileNameOriginal, "wb") as buffer:
         shutil.copyfileobj(photo.file, buffer)
 
-
     if reqBody.filter == "bw":
+        # black and white
         # im_gray = cv2.imread(fileNameOriginal, cv2.IMREAD_GRAYSCALE)
         # (thresh, im_bw) = cv2.threshold(im_gray, 255, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         
-        # image = cv2.imread(fileNameOriginal) 
-        # gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
-        # cv2.imwrite("./files/"+"f_"+ photo.filename, gray_image)
-        # return FileResponse("./files/"+"f_"+photo.filename)
-
         image = cv2.imread(fileNameOriginal) 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
 
@@ -87,8 +76,4 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
         filename = "./files/"+"f_" + "br" + photo.filename
         cv2.imwrite(filename, image)
         return FileResponse(filename)
-
-    # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
-    # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
-    
     
