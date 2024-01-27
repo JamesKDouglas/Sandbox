@@ -3,6 +3,8 @@ console.log("start JS!");
 let form = document.getElementById("fileForm");
 form.addEventListener("submit", handleSubmit);
 
+let deliverImage = document.getElementById("deliverImage");
+
 async function handleSubmit(e){
     e.preventDefault();//prevent normal POST request from submit button
 
@@ -30,5 +32,11 @@ async function handleSubmit(e){
     fetch(`/uploadfile/?filename=${filename}&filter_param=${filter}`, {
         method: 'POST',
         body: data
-    })
+    }).then(
+        res => res.json()
+    ).then(result => {
+            console.log(result);
+            deliverImage.src = result.message;
+        }
+    ).catch(err => console.log(err))
 }

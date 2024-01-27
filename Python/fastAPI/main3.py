@@ -1,4 +1,7 @@
-# This file is from a commit which works to serve back an image file. It is mostly unmodified!
+# This file is from a commit which used to work to serve back an image file. 
+# It sends a photo back when it was only taking the data from the HTML form. 
+
+# But when I activate JS it no longer sends a photo back
 
 # to make a basic fastAPI server all you do is
 # make a virtual environment with python -m venv .venv
@@ -28,7 +31,7 @@ import copy
 from dataclasses import dataclass
 @dataclass
 class FilterMyPhoto:
-    filter: str = Form(...) 
+    filter_param: str = Form(...) 
     file: UploadFile = Form(...)
 
 # On with the main bit:
@@ -69,7 +72,7 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
         shutil.copyfileobj(photo.file, buffer)
 
 
-    if reqBody.filter == "bw":
+    if reqBody.filter_param == "bw":
         # im_gray = cv2.imread(fileNameOriginal, cv2.IMREAD_GRAYSCALE)
         # (thresh, im_bw) = cv2.threshold(im_gray, 255, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         
@@ -87,9 +90,12 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
 
         image = adjust_contrast_brightness(image,1.25,0)
         filename = "./files/"+"f_" + "br" + photo.filename
-        cv2.imwrite(filename, image)
-        print(filename)
-        return FileResponse(filename)
+        path = "./static/" + filename
+        cv2.imwrite(path, image)
+        print(path)
+        # When I was just using an HTML form I want the image sent back. But now using JS I want a URL  
+        # return FileResponse(filename)
+        return {"message":filename}
 
     # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
     # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
