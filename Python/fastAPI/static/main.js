@@ -21,11 +21,13 @@ async function handleSubmit(e){
 
     var input = document.querySelector('input[type="file"]')
 
+    // This attaches fields to the body. You can send data like filter_param in the URL as a query or 
+    // in the body of the request. Both are fine. 
     var data = new FormData()
     data.append('file', input.files[0])
-    data.append('filter', filter)
+    data.append('filter_param', filter)
 
-    fetch(`/uploadfile/?filename=${filename}&filter_param=${filter}`, {
+    fetch(`/uploadfile/${filename}&filter_param=${filter}`, {
         method: 'POST',
         body: data
     })

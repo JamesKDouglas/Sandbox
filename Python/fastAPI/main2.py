@@ -1,6 +1,4 @@
 # This dispenses with the custom data class and uses the default data types 
-# Here, I try to process both the query parameters from a URL as well as read the image file in the request body
-# That works fine but the problem comes when I try to return the file. 
 
 # to make a basic fastAPI server all you do is
 # make a virtual environment with python -m venv .venv
