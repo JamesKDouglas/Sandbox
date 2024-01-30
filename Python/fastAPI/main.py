@@ -90,7 +90,7 @@ async def upload_file(file: UploadFile = File(...), filter_param: str = Query(..
         return {"message":filename}
 
 @app.get("/api/images/")
-async def get_filenames():
+async def get_filenames(orientation: str = Query(...)):
     # There are no imputs, we just retrieve all filenames
     # return an object of objects, one for each file 
     # as 
@@ -101,6 +101,7 @@ async def get_filenames():
     from os import listdir
     from os.path import isfile, join
     import json 
+
     onlyfiles = [f for f in listdir("./static/filesOriginal/") if isfile(join("./static/filesOriginal/", f))]
 
     print(onlyfiles)
@@ -115,6 +116,26 @@ async def get_filenames():
         file_stats = os.stat("./static/filesOriginal/"+file)
 
         obj = {"id": file, "size": file_stats.st_size, "width": width, "height": height, "area": width*height }
-        fileDict[file] = obj
-    jsonFormat = json.dumps(fileDict)
-    return jsonFormat
+        if orientation == "landscape":
+            # If this is specified then return only landscape ones
+            if obj["width"]>obj["height"]:
+                fileDict[file] = obj
+        else:
+            # Otherwise, return all of themm
+            fileDict[file] = obj
+
+    jsonFileList = json.dumps(fileDict)
+    
+    return jsonFileList
+
+    # if orientation == "landscape":
+    #     # filter our only landscape ones
+    #     newList = []
+    #     for f in fileDict:
+    #         print(f)
+    #         if f.width>f.height:
+    #             newList.append(f)
+    #     jsonLandscapeOnly = json.dumps(newList)
+    #     return jsonLandscapeOnly
+    # else:
+        # return jsonFileList
