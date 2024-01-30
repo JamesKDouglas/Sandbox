@@ -57,23 +57,21 @@ def adjust_contrast_brightness(img, contrast:float=1.0, brightness:int=0):
 async def upload_file(file: UploadFile = File(...), filter_param: str = Query(...), filename: str = Query(...)):
     
     print(filename, filter_param)
-    photo = file
-    fileNameOriginal = "./files/"+photo.filename
-    saveAsNumpy(photo)
+    fileNameOriginal = "./filesOriginal/"+filename
+    saveAsNumpy(file)
 
-    with open(fileNameOriginal, "wb") as buffer:
-        shutil.copyfileobj(photo.file, buffer)
+    # save original
+    with open(fileNameOriginal, "wb") as file_object:
+        file_object.write(file.file.read())
 
     image = cv2.imread(fileNameOriginal) 
     
     if filter_param == "bw":
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
 
-        filename = "./files/"+ "bw_" + photo.filename
+        filename = "./files/"+ "bw_" + filename
         path = "./static/" + filename
         cv2.imwrite(path, image)
-
-        print(path)
 
         return {"message":filename}
 
@@ -83,11 +81,20 @@ async def upload_file(file: UploadFile = File(...), filter_param: str = Query(..
         image[:,:, 1]= 0
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
         
-        filename = "./files/"+ "bw_red" + photo.filename
+        filename = "./files/"+ "bw_red" + filename
         path = "./static/" + filename
         cv2.imwrite(path, image)
-
-        print(path)
         
         # This is required because the JS retrieves the image with this.
         return {"message":filename}
+
+@app.get("/api/images/")
+async def get_filenames():
+    # There are no imputs, we just retrieve all filenames
+    # return an object of objects, one for each file 
+    # as 
+    # {{id:(filename), size:, width:, height:, area:}{}}
+    # Ok that means we need to create an id. 
+    # Filenames must also be unique if the directory is the same
+    # Now, I'm also suppose to just upload the image. 
+    pass
