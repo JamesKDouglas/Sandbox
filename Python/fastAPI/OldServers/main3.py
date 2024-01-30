@@ -25,7 +25,6 @@ from fastapi.responses import FileResponse
 from PIL import Image
 from io import BytesIO
 import numpy as np
-import copy
 
 # this helps process the POST request body to include radio button info
 from dataclasses import dataclass
@@ -72,32 +71,43 @@ async def read_root(reqBody: FilterMyPhoto = Depends()):
         shutil.copyfileobj(photo.file, buffer)
 
 
+    image = cv2.imread(fileNameOriginal) 
+    
     if reqBody.filter_param == "bw":
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+
+        filename = "./files/"+ "bw_" + photo.filename
+        path = "./static/" + filename
+        cv2.imwrite(path, image)
+
+        print(path)
+
+        return {"message":filename}
+
+    elif reqBody.filter_param == "red":
+        # BGR 012
+        image[:,:, 0]= 0
+        image[:,:, 1]= 0
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+        
+        filename = "./files/"+ "bw_red" + photo.filename
+        path = "./static/" + filename
+        cv2.imwrite(path, image)
+
+        print(path)
+        
+        # This is required because the JS retrieves the image with this.
+        return {"message":filename}
+
+
+        # Black and white with threshhold:
         # im_gray = cv2.imread(fileNameOriginal, cv2.IMREAD_GRAYSCALE)
         # (thresh, im_bw) = cv2.threshold(im_gray, 255, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         
-        # image = cv2.imread(fileNameOriginal) 
-        # gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
-        # cv2.imwrite("./files/"+"f_"+ photo.filename, gray_image)
-        # return FileResponse("./files/"+"f_"+photo.filename)
-
-        image = cv2.imread(fileNameOriginal) 
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
-
         # "sharpen"
         # kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
         # image = cv2.filter2D(image, -1, kernel)
 
-        image = adjust_contrast_brightness(image,1.25,0)
-        filename = "./files/"+"f_" + "br" + photo.filename
-        path = "./static/" + filename
-        cv2.imwrite(path, image)
-        print(path)
-        # When I was just using an HTML form I want the image sent back. But now using JS I want a URL  
-        # return FileResponse(filename)
-        return {"message":filename}
+        # Increase contrast a bit. I like this for grayscale images :
+        # image = adjust_contrast_brightness(image,1.25,0)
 
-    # now for filtering the image, refer to reqBody.filter. It can be "bw" or "red" right now.
-    # should I use OpenCV for the filtering? idk, whatever works. OpenCV seems like overkill
-    
-    
