@@ -23,9 +23,10 @@ import cv2
 from fastapi.responses import FileResponse
 
 # for numpy arrays
-from PIL import Image
+from PIL import Image, ExifTags
 from io import BytesIO
 import numpy as np
+import os as os
 # import copy
 
 app = FastAPI()
@@ -57,7 +58,7 @@ def adjust_contrast_brightness(img, contrast:float=1.0, brightness:int=0):
 async def upload_file(file: UploadFile = File(...), filter_param: str = Query(...), filename: str = Query(...)):
     
     print(filename, filter_param)
-    fileNameOriginal = "./filesOriginal/"+filename
+    fileNameOriginal = "./static/filesOriginal/"+filename
     saveAsNumpy(file)
 
     # save original
@@ -97,4 +98,23 @@ async def get_filenames():
     # Ok that means we need to create an id. 
     # Filenames must also be unique if the directory is the same
     # Now, I'm also suppose to just upload the image. 
-    pass
+    from os import listdir
+    from os.path import isfile, join
+    import json 
+    onlyfiles = [f for f in listdir("./static/filesOriginal/") if isfile(join("./static/filesOriginal/", f))]
+
+    print(onlyfiles)
+    fileDict = {}
+    for file in onlyfiles:
+        # img = Image.open("./static/filesOriginal/"+file)
+        # exif = { ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS }
+        
+        # this doesn't actually read the image, so it's fairly quick
+        im = Image.open("./static/filesOriginal/"+file)
+        width, height = im.size
+        file_stats = os.stat("./static/filesOriginal/"+file)
+
+        obj = {"id": file, "size": file_stats.st_size, "width": width, "height": height, "area": width*height }
+        fileDict[file] = obj
+    jsonFormat = json.dumps(fileDict)
+    return jsonFormat
