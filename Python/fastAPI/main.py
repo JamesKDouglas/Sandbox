@@ -29,6 +29,8 @@ import numpy as np
 import os as os
 # import copy
 
+from sql_app import main as db
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -57,6 +59,15 @@ def adjust_contrast_brightness(img, contrast:float=1.0, brightness:int=0):
 @app.post("/uploadfile/")
 async def upload_file(file: UploadFile = File(...), filter_param: str = Query(...), filename: str = Query(...)):
     
+
+    # put it into the database
+    # @app.post("/users/", response_model=schemas.User)
+    # def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    #     db_user = crud.get_user_by_email(db, email=user.email)
+    #     if db_user:
+    #         raise HTTPException(status_code=400, detail="Email already registered")
+    #     return crud.create_user(db=db, user=user)
+
     print(filename, filter_param)
     fileNameOriginal = "./static/filesOriginal/"+filename
     saveAsNumpy(file)
@@ -90,7 +101,7 @@ async def upload_file(file: UploadFile = File(...), filter_param: str = Query(..
         return {"message":filename}
 
 @app.get("/api/images/")
-async def get_filenames(orientation: str = Query(...)):
+async def get_filenames(orientation: str = Query(None), id: str = Query(None)):
     # There are no imputs, we just retrieve all filenames
     # return an object of objects, one for each file 
     # as 
@@ -120,9 +131,17 @@ async def get_filenames(orientation: str = Query(...)):
             # If this is specified then return only landscape ones
             if obj["width"]>obj["height"]:
                 fileDict[file] = obj
+        elif orientation == "portrait":
+            # If this is specified then return only portrait ones
+            if obj["height"]>obj["width"]:
+                fileDict[file] = obj
         else:
-            # Otherwise, return all of themm
+            # Otherwise, return all of them
             fileDict[file] = obj
+
+    if id != Query(None):
+        # If just 1 file is requested, discard the rest
+        fileDict = fileDict[id]
 
     jsonFileList = json.dumps(fileDict)
     
