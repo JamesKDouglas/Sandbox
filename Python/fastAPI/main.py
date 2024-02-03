@@ -29,7 +29,19 @@ import numpy as np
 import os as os
 # import copy
 
-from sql_app import main as db
+from sql_app import main #I'm getting rid of this, just integrating
+
+# from sql_app import crud
+
+from typing import List
+
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
+
+from . import crud, models, schemas
+from .database import SessionLocal, engine
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -55,19 +67,17 @@ def adjust_contrast_brightness(img, contrast:float=1.0, brightness:int=0):
     brightness += int(round(255*(1-contrast)/2))
     return cv2.addWeighted(img, contrast, img, 0, brightness)
 
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db #This is kind of an async technique. A generator?
+    finally:
+        db.close()
 
 @app.post("/uploadfile/")
-async def upload_file(file: UploadFile = File(...), filter_param: str = Query(...), filename: str = Query(...)):
+async def upload_file(file: UploadFile = File(...), filter_param: str = Query(...), filename: str = Query(...), db: Session = Depends(get_db)):
     
-
-    # put it into the database
-    # @app.post("/users/", response_model=schemas.User)
-    # def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    #     db_user = crud.get_user_by_email(db, email=user.email)
-    #     if db_user:
-    #         raise HTTPException(status_code=400, detail="Email already registered")
-    #     return crud.create_user(db=db, user=user)
-
     print(filename, filter_param)
     fileNameOriginal = "./static/filesOriginal/"+filename
     saveAsNumpy(file)
@@ -78,6 +88,21 @@ async def upload_file(file: UploadFile = File(...), filter_param: str = Query(..
 
     image = cv2.imread(fileNameOriginal) 
     
+    # update the database. The database just keeps a list of the files and some information about them. No actual pictures
+    # go inside the database. 
+
+    # get image dimensions
+    # dimensions = image.shape
+    height = image.shape[0]
+    width = image.shape[1]
+    area = width*height
+    size = file.size
+
+    print(filename + ", " + height + ", " + width + ", " + area + ", " + size)
+    
+    crud.create_photo(db, filename, size, height, width, area)
+
+    # Make a processed image then send back the URL for it
     if filter_param == "bw":
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
 
@@ -101,7 +126,7 @@ async def upload_file(file: UploadFile = File(...), filter_param: str = Query(..
         return {"message":filename}
 
 @app.get("/api/images/")
-async def get_filenames(orientation: str = Query(None), id: str = Query(None)):
+async def get_filenames(orientation: str = Query(None), id: str = Query(None), db: Session = Depends(get_db)):
     # There are no imputs, we just retrieve all filenames
     # return an object of objects, one for each file 
     # as 
@@ -112,6 +137,8 @@ async def get_filenames(orientation: str = Query(None), id: str = Query(None)):
     from os import listdir
     from os.path import isfile, join
     import json 
+
+    main.crud.get_items(db)
 
     onlyfiles = [f for f in listdir("./static/filesOriginal/") if isfile(join("./static/filesOriginal/", f))]
 
