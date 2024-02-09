@@ -21,36 +21,66 @@
 // if two solutions are the same return the -ve.
 
 
-function f(x,y) {
-  //   2 rollover cases
-  //   magnitude check
-    
-  //   lets run some checks on x and y.
-  //   [0,1,2,3,4,5,6,7,8,9]
-    
-  //   lets do some counting.
-  //   which is larger x-y or y-x
-  //   if y-x is 5, report -5.
-  //   the solution is never larger than 5 in magnitude. so if abs(x-y)>5, take 
-  //   10-abs(x-y). 
-  //   Sign? keep it straight.
-    
-    m=Math.abs(y-x)
-    s=0
-    if(m>=5&&y-x>0){
-      s=m-10
-    } else if (m>=5&&y-x<0){
-      s=10-m
-    } else if (y-x>0) {
-      s=y-x
-    } else if (y-x<0) {
-      s=y-x
-    }
-    return s;
-  }
+// function f(x,y) {
+  //ccw -, cw +
+
+  // 0 to 3 => cw 3-0: 3. ccw 3-10: -7
+  // 9 to 2 => cw 12-9: 3. ccw 2-9: -7
+
+  // is y larger or smaller than x?
+  // if y is larger than x:
+    // clockwise, the distance is y-x.
+    // counterclockwise needs a rollover the distance is y-(10+x)
+  // if y is smaller than x:
+    // clockwise needs a rollover distance is (10+y)-x
+    // ccw is x-y
+
+  // // calculate distances and handle zero case
+  // if (y>x){
+  //   cw=y-x;
+  //   ccw=-(y-(10+x));
+  // } else if (y<x){
+  //   cw=10+y-x;
+  //   ccw=-(x-y);
+  // } else return 0 //x and y are the same.
+
+  // // handle sign and parity case
+  // if (cw<ccw){
+  //   m = cw;
+  // } else if (cw>ccw){
+  //   m = -ccw;
+  // } else return -5 //cw and ccw are the same
+
+  // return m
+    // m=Math.abs(y-x)
+    // s=0
+    // if(m>=5&&y-x>0){
+    //   s=m-10
+    // } else if (m>=5&&y-x<0){
+    //   s=10-m
+    // } else if (y-x>0) {
+    //   s=y-x
+    // } else if (y-x<0) {
+    //   s=y-x
+    // }
+    // return s;
+  // }
+
+  // eighdreeuhn provides
+  f=(x,y)=>(y+15-x)%10-5
   
   console.log(f(1,3), 2)
   console.log(f(5,2), -3)
   console.log(f(7,2), -5)
   console.log(f(9,1), 2)
   console.log(f(1,9), -2)
+
+  // ok but how does one arrive at that?
+  // Well, use modulo for a dial. But we have to stay above zero 
+  // so use a spacer.
+  // the difference is y-x. so (y-x+spacer)%10.
+  // how large should the spacer be?
+  // well if x=y the final answer is zero. 
+  // if they are at maximum distance from each other final answer is -5
+  //x=0, y=5 
+  // spacer of 15. then subtract 5.
