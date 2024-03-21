@@ -21,19 +21,17 @@ function collinearity( x1,y1, x2,y2 ) {
   //   If the ratio is the same return true. else return false.
     
     //if we have a dot
-    if (x1===0 && y1===0 || x2===0&&y2===0){
+  
+    if (x1===0 && x2===0 || y1===0 && y2===0){
       return true;
     }
     
     let xr;//x1/x2
     let yr;//y1/y2
     
-    if (x2 === 0 && y2 ===0){
+    if (x1 === 0 && y2 ===0 || y1 === 0 && x2 ===0){
       //orthogonal
       return false
-    } else if (y2===0){
-      //But x2 is not 0. Could be pointing many ways but anyways not colinear
-      return false;
     }
     
     xr = x1/x2;
@@ -52,4 +50,5 @@ function collinearity( x1,y1, x2,y2 ) {
   console.log(collinearity(0,0,0,0), true);
   console.log(collinearity(0,0,1,0), true);
   console.log(collinearity(5,7,0,0), true);
+  console.log(collinearity(4,0,11,0), true);
   
