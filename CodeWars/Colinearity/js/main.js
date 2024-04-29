@@ -52,3 +52,10 @@ function collinearity( x1,y1, x2,y2 ) {
   console.log(collinearity(5,7,0,0), true);
   console.log(collinearity(4,0,11,0), true);
   
+
+  // ok a few people have this solution,
+  // function collinearity( x1,y1, x2,y2 ) {
+  //   return x1*y2===y1*x2
+  // }
+  // It makes sense - we just want to know if x1/x2 == y1/y2. But we also need to avoid dividing by 0.
+  // so just multiply by x2 and y2.
