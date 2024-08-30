@@ -23,6 +23,13 @@ var isPalindrome = function(x) {
     //Reverse the array and compare the arrays I guess.
     //That would work fine but I don't see how it would be better.
 
+    //In the example I start with 100. How could you automate that? Like some function that tells me the lowest power of 10. 
+    // like take the logarithm then round down,
+    // v = 121;
+    // return Math.pow(10, Math.floor(Math.log10(v)));
+
+    //I could actually just use the Math.floor(Math.log10(v)) as the start of the loop to deconstruct the number into its decimal columns
+
     
 };
 
