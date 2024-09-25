@@ -51,5 +51,5 @@ var addTwoNumbers = function(l1, l2) {
 
 // I find the iterative solution easier to think through and the recursive one doesn't perform better.
 // It shows the use of a ListNode well - call l1.next and it reports not only the next value but the address which can be assigned to what appears to a variable but is the original object. Now you can use that as if it were a primitive variable again.
-// The original problem just says the inputs are 'linked lists'. Then they show array notation for them. What they really mean is that the objects provided are ListNode objects, which have associated methods. A linkedList could be written with literal object notation or could be a more basic object without methods to use.
+// The original problem just says the inputs are 'linked lists'. Then they show array notation for them. What they really mean is that the objects provided are ListNode objects, which have associated methods. A linked list could be written with literal object notation or could be a more basic object without methods to use.
 
